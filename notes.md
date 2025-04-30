@@ -1,1 +1,1 @@
-# My notes
+### Elena Ketcheson, CS 240
