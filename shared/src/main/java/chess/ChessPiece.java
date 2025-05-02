@@ -2,6 +2,7 @@ package chess;
 
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Vector;
 
 /**
  * Represents a single chess piece
@@ -67,6 +68,22 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+        Vector<ChessMove> possibleMoves = new Vector<ChessMove>();
+
+        if (this.type == PieceType.QUEEN) {
+            return possibleMoves;
+        } else if (this.type == PieceType.ROOK) {
+            return possibleMoves;
+        } else if (this.type == PieceType.BISHOP) {
+            return possibleMoves;
+        } else if (this.type == PieceType.KNIGHT) {
+            return possibleMoves;
+        } else if (this.type == PieceType.KING) {
+            return possibleMoves;
+        } else {
+            return possibleMoves;
+        }
+
+        return possibleMoves;
     }
 }
