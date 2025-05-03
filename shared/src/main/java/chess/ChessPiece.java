@@ -167,6 +167,79 @@ public class ChessPiece {
         return axialMoves;
     }
 
+    private Collection<ChessMove> knightMoves(ChessPosition myPosition, ChessBoard board, ChessGame.TeamColor color) {
+        Vector<ChessMove> knightMoves = new Vector<>();
+
+        int startRow = myPosition.getRow();
+        int startCol = myPosition.getColumn();
+
+        int row = startRow + 2;
+        int col = startCol + 1;
+        if (row < 9 && row > 0 && col < 9 && col > 0) {
+            ChessPosition endPosition = new ChessPosition(row, col);
+            if (board.getPiece(endPosition) == null || board.getPiece(endPosition).getTeamColor() != color) {
+                knightMoves.add(new ChessMove(myPosition, endPosition, null));
+            }
+        }
+        col -= 2;
+        if (row < 9 && row > 0 && col < 9 && col > 0) {
+            ChessPosition endPosition = new ChessPosition(row, col);
+            if (board.getPiece(endPosition) == null || board.getPiece(endPosition).getTeamColor() != color) {
+                knightMoves.add(new ChessMove(myPosition, endPosition, null));
+            }
+        }
+
+        row = startRow - 2;
+        col = startCol + 1;
+        if (row < 9 && row > 0 && col < 9 && col > 0) {
+            ChessPosition endPosition = new ChessPosition(row, col);
+            if (board.getPiece(endPosition) == null || board.getPiece(endPosition).getTeamColor() != color) {
+                knightMoves.add(new ChessMove(myPosition, endPosition, null));
+            }
+        }
+        col -= 2;
+        if (row < 9 && row > 0 && col < 9 && col > 0) {
+            ChessPosition endPosition = new ChessPosition(row, col);
+            if (board.getPiece(endPosition) == null || board.getPiece(endPosition).getTeamColor() != color) {
+                knightMoves.add(new ChessMove(myPosition, endPosition, null));
+            }
+        }
+
+        row = startRow + 1;
+        col = startCol + 2;
+        if (row < 9 && row > 0 && col < 9 && col > 0) {
+            ChessPosition endPosition = new ChessPosition(row, col);
+            if (board.getPiece(endPosition) == null || board.getPiece(endPosition).getTeamColor() != color) {
+                knightMoves.add(new ChessMove(myPosition, endPosition, null));
+            }
+        }
+        row -= 2;
+        if (row < 9 && row > 0 && col < 9 && col > 0) {
+            ChessPosition endPosition = new ChessPosition(row, col);
+            if (board.getPiece(endPosition) == null || board.getPiece(endPosition).getTeamColor() != color) {
+                knightMoves.add(new ChessMove(myPosition, endPosition, null));
+            }
+        }
+
+        row = startRow + 1;
+        col = startCol - 2;
+        if (row < 9 && row > 0 && col < 9 && col > 0) {
+            ChessPosition endPosition = new ChessPosition(row, col);
+            if (board.getPiece(endPosition) == null || board.getPiece(endPosition).getTeamColor() != color) {
+                knightMoves.add(new ChessMove(myPosition, endPosition, null));
+            }
+        }
+        row -= 2;
+        if (row < 9 && row > 0 && col < 9 && col > 0) {
+            ChessPosition endPosition = new ChessPosition(row, col);
+            if (board.getPiece(endPosition) == null || board.getPiece(endPosition).getTeamColor() != color) {
+                knightMoves.add(new ChessMove(myPosition, endPosition, null));
+            }
+        }
+
+        return knightMoves;
+    }
+
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in
@@ -185,7 +258,7 @@ public class ChessPiece {
         } else if (this.type == PieceType.BISHOP) {
             possibleMoves.addAll(checkDiagonals(myPosition, board, this.getTeamColor()));
         } else if (this.type == PieceType.KNIGHT) {
-            return possibleMoves;
+            possibleMoves.addAll(knightMoves(myPosition, board, this.pieceColor));
         } else if (this.type == PieceType.KING) {
             return possibleMoves;
         } else {
