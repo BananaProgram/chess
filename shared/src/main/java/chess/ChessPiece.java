@@ -61,6 +61,15 @@ public class ChessPiece {
     }
 
     /**
+     * Checks if a position is diagonal from the current position
+     *
+     * @return Boolean
+     */
+    private boolean isDiagonal(ChessPosition myPosition, int endX, int endY) {
+        return (endX - myPosition.getRow()) == (endY - myPosition.getColumn());
+    }
+
+    /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in
      * danger
@@ -71,7 +80,16 @@ public class ChessPiece {
         Vector<ChessMove> possibleMoves = new Vector<ChessMove>();
 
         if (this.type == PieceType.QUEEN) {
-            return possibleMoves;
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if ((i == myPosition.getRow()) || (j == myPosition.getColumn()) || (isDiagonal(myPosition, i, j))) {
+                        ChessPosition endPosition = new ChessPosition(i, j);
+                        if (board.getPiece(endPosition) == null) {
+                            possibleMoves.addElement(new ChessMove(myPosition, endPosition, null));
+                        }
+                    }
+                }
+            }
         } else if (this.type == PieceType.ROOK) {
             return possibleMoves;
         } else if (this.type == PieceType.BISHOP) {
