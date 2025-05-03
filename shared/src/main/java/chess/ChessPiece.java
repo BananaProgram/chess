@@ -80,8 +80,8 @@ public class ChessPiece {
         Vector<ChessMove> possibleMoves = new Vector<ChessMove>();
 
         if (this.type == PieceType.QUEEN) {
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
+            for (int i = 1; i < 9; i++) {
+                for (int j = 1; j < 9; j++) {
                     if ((i == myPosition.getRow()) || (j == myPosition.getColumn()) || (isDiagonal(myPosition, i, j))) {
                         ChessPosition endPosition = new ChessPosition(i, j);
                         if (board.getPiece(endPosition) == null) {
