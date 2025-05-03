@@ -109,43 +109,51 @@ public class ChessPiece {
         return diagonalMoves;
     }
 
-    private Collection<ChessMove> checkAxes(ChessPosition myPosition, ChessBoard board) {
+    private Collection<ChessMove> checkAxes(ChessPosition myPosition, ChessBoard board, ChessGame.TeamColor color) {
         Vector<ChessMove> axialMoves = new Vector<>();
-        int x = myPosition.getRow() + 1;
-        int y = myPosition.getColumn();
 
-        while (x < 9 && x > 0) {
-            ChessPosition endPosition = new ChessPosition(x, y);
-            axialMoves.add(new ChessMove(myPosition, endPosition, null));
-            x++;
-            if (board.getPiece(endPosition) != null) {break;}
+        int row = myPosition.getRow() + 1;
+        int col = myPosition.getColumn();
+        while (row < 9 && row > 0) {
+            ChessPosition endPosition = new ChessPosition(row, col);
+            if (board.getPiece(endPosition) == null || board.getPiece(endPosition).getTeamColor() != color) {
+                axialMoves.add(new ChessMove(myPosition, endPosition, null));
+                row++;
+            } else {break;}
+            if (board.getPiece(endPosition) != null && board.getPiece(endPosition).getTeamColor() != color) {break;}
         }
 
-        x = myPosition.getRow() - 1;
-        y = myPosition.getColumn();
-        while (x < 9 && x > 0) {
-            ChessPosition endPosition = new ChessPosition(x, y);
-            axialMoves.add(new ChessMove(myPosition, endPosition, null));
-            x--;
-            if (board.getPiece(endPosition) != null) {break;}
+        row = myPosition.getRow() - 1;
+        col = myPosition.getColumn();
+        while (row < 9 && row > 0) {
+            ChessPosition endPosition = new ChessPosition(row, col);
+            if (board.getPiece(endPosition) == null || board.getPiece(endPosition).getTeamColor() != color) {
+                axialMoves.add(new ChessMove(myPosition, endPosition, null));
+                row--;
+            } else {break;}
+            if (board.getPiece(endPosition) != null && board.getPiece(endPosition).getTeamColor() != color) {break;}
         }
 
-        x = myPosition.getRow();
-        y = myPosition.getColumn() + 1;
-        while (y < 9 && y > 0) {
-            ChessPosition endPosition = new ChessPosition(x, y);
-            axialMoves.add(new ChessMove(myPosition, endPosition, null));
-            y++;
-            if (board.getPiece(endPosition) != null) {break;}
+        row = myPosition.getRow();
+        col = myPosition.getColumn() + 1;
+        while (col < 9 && col > 0) {
+            ChessPosition endPosition = new ChessPosition(row, col);
+            if (board.getPiece(endPosition) == null || board.getPiece(endPosition).getTeamColor() != color) {
+                axialMoves.add(new ChessMove(myPosition, endPosition, null));
+                col++;
+            } else {break;}
+            if (board.getPiece(endPosition) != null && board.getPiece(endPosition).getTeamColor() != color) {break;}
         }
 
-        x = myPosition.getRow();
-        y = myPosition.getColumn() - 1;
-        while (y < 9 && y > 0) {
-            ChessPosition endPosition = new ChessPosition(x, y);
-            axialMoves.add(new ChessMove(myPosition, endPosition, null));
-            y--;
-            if (board.getPiece(endPosition) == null) {break;}
+        row = myPosition.getRow();
+        col = myPosition.getColumn() - 1;
+        while (col < 9 && col > 0) {
+            ChessPosition endPosition = new ChessPosition(row, col);
+            if (board.getPiece(endPosition) == null || board.getPiece(endPosition).getTeamColor() != color) {
+                axialMoves.add(new ChessMove(myPosition, endPosition, null));
+                col--;
+            } else {break;}
+            if (board.getPiece(endPosition) != null && board.getPiece(endPosition).getTeamColor() != color) {break;}
         }
 
         return axialMoves;
@@ -163,9 +171,9 @@ public class ChessPiece {
 
         if (this.type == PieceType.QUEEN) {
             possibleMoves.addAll(checkDiagonals(myPosition, board));
-            possibleMoves.addAll(checkAxes(myPosition, board));
+            possibleMoves.addAll(checkAxes(myPosition, board, this.pieceColor));
         } else if (this.type == PieceType.ROOK) {
-            possibleMoves.addAll(checkAxes(myPosition, board));
+            possibleMoves.addAll(checkAxes(myPosition, board, this.pieceColor));
         } else if (this.type == PieceType.BISHOP) {
             possibleMoves.addAll(checkDiagonals(myPosition, board));
         } else if (this.type == PieceType.KNIGHT) {
