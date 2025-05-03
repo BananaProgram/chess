@@ -63,47 +63,55 @@ public class ChessPiece {
      *
      * @return Boolean
      */
-    private Collection<ChessMove> checkDiagonals(ChessPosition myPosition, ChessBoard board) {
+    private Collection<ChessMove> checkDiagonals(ChessPosition myPosition, ChessBoard board, ChessGame.TeamColor color) {
         Vector<ChessMove> diagonalMoves = new Vector<>();
         int x = myPosition.getRow() + 1;
         int y = myPosition.getColumn() + 1;
 
         while (x < 9 && y < 9 && x > 0 && y > 0) {
             ChessPosition endPosition = new ChessPosition(x, y);
-            diagonalMoves.add(new ChessMove(myPosition, endPosition, null));
-            x++;
-            y++;
-            if (board.getPiece(endPosition) != null) {break;}
+            if (board.getPiece(endPosition) == null || board.getPiece(endPosition).getTeamColor() != color) {
+                diagonalMoves.add(new ChessMove(myPosition, endPosition, null));
+                x++;
+                y++;
+            } else {break;}
+            if (board.getPiece(endPosition) != null && board.getPiece(endPosition).getTeamColor() != color) {break;}
         }
 
         x = myPosition.getRow() + 1;
         y = myPosition.getColumn() - 1;
         while (x < 9 && y < 9 && x > 0 && y > 0) {
             ChessPosition endPosition = new ChessPosition(x, y);
-            diagonalMoves.add(new ChessMove(myPosition, endPosition, null));
-            x++;
-            y--;
-            if (board.getPiece(endPosition) != null) {break;}
+            if (board.getPiece(endPosition) == null || board.getPiece(endPosition).getTeamColor() != color) {
+                diagonalMoves.add(new ChessMove(myPosition, endPosition, null));
+                x++;
+                y--;
+            } else {break;}
+            if (board.getPiece(endPosition) != null && board.getPiece(endPosition).getTeamColor() != color) {break;}
         }
 
         x = myPosition.getRow() - 1;
         y = myPosition.getColumn() + 1;
         while (x < 9 && y < 9 && x > 0 && y > 0) {
             ChessPosition endPosition = new ChessPosition(x, y);
-            diagonalMoves.add(new ChessMove(myPosition, endPosition, null));
-            x--;
-            y++;
-            if (board.getPiece(endPosition) != null) {break;}
+            if (board.getPiece(endPosition) == null || board.getPiece(endPosition).getTeamColor() != color) {
+                diagonalMoves.add(new ChessMove(myPosition, endPosition, null));
+                x--;
+                y++;
+            } else {break;}
+            if (board.getPiece(endPosition) != null && board.getPiece(endPosition).getTeamColor() != color) {break;}
         }
 
         x = myPosition.getRow() - 1;
         y = myPosition.getColumn() - 1;
         while (x < 9 && y < 9 && x > 0 && y > 0) {
             ChessPosition endPosition = new ChessPosition(x, y);
-            diagonalMoves.add(new ChessMove(myPosition, endPosition, null));
-            x--;
-            y--;
-            if (board.getPiece(endPosition) != null) {break;}
+            if (board.getPiece(endPosition) == null || board.getPiece(endPosition).getTeamColor() != color) {
+                diagonalMoves.add(new ChessMove(myPosition, endPosition, null));
+                x--;
+                y--;
+            } else {break;}
+            if (board.getPiece(endPosition) != null && board.getPiece(endPosition).getTeamColor() != color) {break;}
         }
 
         return diagonalMoves;
@@ -170,12 +178,12 @@ public class ChessPiece {
         Vector<ChessMove> possibleMoves = new Vector<>();
 
         if (this.type == PieceType.QUEEN) {
-            possibleMoves.addAll(checkDiagonals(myPosition, board));
+            possibleMoves.addAll(checkDiagonals(myPosition, board, this.getTeamColor()));
             possibleMoves.addAll(checkAxes(myPosition, board, this.pieceColor));
         } else if (this.type == PieceType.ROOK) {
             possibleMoves.addAll(checkAxes(myPosition, board, this.pieceColor));
         } else if (this.type == PieceType.BISHOP) {
-            possibleMoves.addAll(checkDiagonals(myPosition, board));
+            possibleMoves.addAll(checkDiagonals(myPosition, board, this.getTeamColor()));
         } else if (this.type == PieceType.KNIGHT) {
             return possibleMoves;
         } else if (this.type == PieceType.KING) {
