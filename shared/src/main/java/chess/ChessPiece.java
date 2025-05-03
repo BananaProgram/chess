@@ -65,8 +65,54 @@ public class ChessPiece {
      *
      * @return Boolean
      */
-    private boolean isDiagonal(ChessPosition myPosition, int endX, int endY) {
-        return (endX - myPosition.getRow()) == (endY - myPosition.getColumn());
+    private Collection<ChessMove> checkDiagonals(ChessPosition myPosition, ChessBoard board) {
+        Vector<ChessMove> diagonalMoves = new Vector<ChessMove>();
+        int x = myPosition.getRow() + 1;
+        int y = myPosition.getColumn() + 1;
+
+        while (x < 9 && y < 9 && x > 0 && y > 0) {
+            ChessPosition endPosition = new ChessPosition(x, y);
+            if (board.getPiece(endPosition) == null) {
+                diagonalMoves.add(new ChessMove(myPosition, endPosition, null));
+                x++;
+                y++;
+            } else {break;}
+        }
+
+        x = myPosition.getRow() + 1;
+        y = myPosition.getColumn() - 1;
+        while (x < 9 && y < 9 && x > 0 && y > 0) {
+            ChessPosition endPosition = new ChessPosition(x, y);
+            if (board.getPiece(endPosition) == null) {
+                diagonalMoves.add(new ChessMove(myPosition, endPosition, null));
+                x++;
+                y--;
+            } else {break;}
+        }
+
+        x = myPosition.getRow() - 1;
+        y = myPosition.getColumn() + 1;
+        while (x < 9 && y < 9 && x > 0 && y > 0) {
+            ChessPosition endPosition = new ChessPosition(x, y);
+            if (board.getPiece(endPosition) == null) {
+                diagonalMoves.add(new ChessMove(myPosition, endPosition, null));
+                x--;
+                y++;
+            } else {break;}
+        }
+
+        x = myPosition.getRow() - 1;
+        y = myPosition.getColumn() - 1;
+        while (x < 9 && y < 9 && x > 0 && y > 0) {
+            ChessPosition endPosition = new ChessPosition(x, y);
+            if (board.getPiece(endPosition) == null) {
+                diagonalMoves.add(new ChessMove(myPosition, endPosition, null));
+                x--;
+                y--;
+            } else {break;}
+        }
+
+        return diagonalMoves;
     }
 
     /**
@@ -82,7 +128,7 @@ public class ChessPiece {
         if (this.type == PieceType.QUEEN) {
             for (int i = 1; i < 9; i++) {
                 for (int j = 1; j < 9; j++) {
-                    if ((i == myPosition.getRow()) || (j == myPosition.getColumn()) || (isDiagonal(myPosition, i, j))) {
+                    if ((i == myPosition.getRow()) || (j == myPosition.getColumn())) {
                         ChessPosition endPosition = new ChessPosition(i, j);
                         if (board.getPiece(endPosition) == null) {
                             possibleMoves.addElement(new ChessMove(myPosition, endPosition, null));
