@@ -72,44 +72,40 @@ public class ChessPiece {
 
         while (x < 9 && y < 9 && x > 0 && y > 0) {
             ChessPosition endPosition = new ChessPosition(x, y);
-            if (board.getPiece(endPosition) == null) {
-                diagonalMoves.add(new ChessMove(myPosition, endPosition, null));
-                x++;
-                y++;
-            } else {break;}
+            diagonalMoves.add(new ChessMove(myPosition, endPosition, null));
+            x++;
+            y++;
+            if (board.getPiece(endPosition) != null) {break;}
         }
 
         x = myPosition.getRow() + 1;
         y = myPosition.getColumn() - 1;
         while (x < 9 && y < 9 && x > 0 && y > 0) {
             ChessPosition endPosition = new ChessPosition(x, y);
-            if (board.getPiece(endPosition) == null) {
-                diagonalMoves.add(new ChessMove(myPosition, endPosition, null));
-                x++;
-                y--;
-            } else {break;}
+            diagonalMoves.add(new ChessMove(myPosition, endPosition, null));
+            x++;
+            y--;
+            if (board.getPiece(endPosition) != null) {break;}
         }
 
         x = myPosition.getRow() - 1;
         y = myPosition.getColumn() + 1;
         while (x < 9 && y < 9 && x > 0 && y > 0) {
             ChessPosition endPosition = new ChessPosition(x, y);
-            if (board.getPiece(endPosition) == null) {
-                diagonalMoves.add(new ChessMove(myPosition, endPosition, null));
-                x--;
-                y++;
-            } else {break;}
+            diagonalMoves.add(new ChessMove(myPosition, endPosition, null));
+            x--;
+            y++;
+            if (board.getPiece(endPosition) != null) {break;}
         }
 
         x = myPosition.getRow() - 1;
         y = myPosition.getColumn() - 1;
         while (x < 9 && y < 9 && x > 0 && y > 0) {
             ChessPosition endPosition = new ChessPosition(x, y);
-            if (board.getPiece(endPosition) == null) {
-                diagonalMoves.add(new ChessMove(myPosition, endPosition, null));
-                x--;
-                y--;
-            } else {break;}
+            diagonalMoves.add(new ChessMove(myPosition, endPosition, null));
+            x--;
+            y--;
+            if (board.getPiece(endPosition) != null) {break;}
         }
 
         return diagonalMoves;
@@ -122,40 +118,36 @@ public class ChessPiece {
 
         while (x < 9 && x > 0) {
             ChessPosition endPosition = new ChessPosition(x, y);
-            if (board.getPiece(endPosition) == null) {
-                axialMoves.add(new ChessMove(myPosition, endPosition, null));
-                x++;
-            } else {break;}
+            axialMoves.add(new ChessMove(myPosition, endPosition, null));
+            x++;
+            if (board.getPiece(endPosition) != null) {break;}
         }
 
         x = myPosition.getRow() - 1;
         y = myPosition.getColumn();
         while (x < 9 && x > 0) {
             ChessPosition endPosition = new ChessPosition(x, y);
-            if (board.getPiece(endPosition) == null) {
-                axialMoves.add(new ChessMove(myPosition, endPosition, null));
-                x--;
-            } else {break;}
+            axialMoves.add(new ChessMove(myPosition, endPosition, null));
+            x--;
+            if (board.getPiece(endPosition) != null) {break;}
         }
 
         x = myPosition.getRow();
         y = myPosition.getColumn() + 1;
         while (y < 9 && y > 0) {
             ChessPosition endPosition = new ChessPosition(x, y);
-            if (board.getPiece(endPosition) == null) {
-                axialMoves.add(new ChessMove(myPosition, endPosition, null));
-                y++;
-            } else {break;}
+            axialMoves.add(new ChessMove(myPosition, endPosition, null));
+            y++;
+            if (board.getPiece(endPosition) != null) {break;}
         }
 
         x = myPosition.getRow();
         y = myPosition.getColumn() - 1;
         while (y < 9 && y > 0) {
             ChessPosition endPosition = new ChessPosition(x, y);
-            if (board.getPiece(endPosition) == null) {
-                axialMoves.add(new ChessMove(myPosition, endPosition, null));
-                y--;
-            } else {break;}
+            axialMoves.add(new ChessMove(myPosition, endPosition, null));
+            y--;
+            if (board.getPiece(endPosition) == null) {break;}
         }
 
         return axialMoves;
@@ -175,9 +167,9 @@ public class ChessPiece {
             possibleMoves.addAll(checkDiagonals(myPosition, board));
             possibleMoves.addAll(checkAxes(myPosition, board));
         } else if (this.type == PieceType.ROOK) {
-            return possibleMoves;
+            possibleMoves.addAll(checkAxes(myPosition, board));
         } else if (this.type == PieceType.BISHOP) {
-            return possibleMoves;
+            possibleMoves.addAll(checkDiagonals(myPosition, board));
         } else if (this.type == PieceType.KNIGHT) {
             return possibleMoves;
         } else if (this.type == PieceType.KING) {
