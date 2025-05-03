@@ -66,7 +66,7 @@ public class ChessPiece {
      * @return Boolean
      */
     private Collection<ChessMove> checkDiagonals(ChessPosition myPosition, ChessBoard board) {
-        Vector<ChessMove> diagonalMoves = new Vector<ChessMove>();
+        Vector<ChessMove> diagonalMoves = new Vector<>();
         int x = myPosition.getRow() + 1;
         int y = myPosition.getColumn() + 1;
 
@@ -115,6 +115,52 @@ public class ChessPiece {
         return diagonalMoves;
     }
 
+    private Collection<ChessMove> checkAxes(ChessPosition myPosition, ChessBoard board) {
+        Vector<ChessMove> axialMoves = new Vector<>();
+        int x = myPosition.getRow() + 1;
+        int y = myPosition.getColumn();
+
+        while (x < 9 && x > 0) {
+            ChessPosition endPosition = new ChessPosition(x, y);
+            if (board.getPiece(endPosition) == null) {
+                axialMoves.add(new ChessMove(myPosition, endPosition, null));
+                x++;
+            } else {break;}
+        }
+
+        x = myPosition.getRow() - 1;
+        y = myPosition.getColumn();
+        while (x < 9 && x > 0) {
+            ChessPosition endPosition = new ChessPosition(x, y);
+            if (board.getPiece(endPosition) == null) {
+                axialMoves.add(new ChessMove(myPosition, endPosition, null));
+                x--;
+            } else {break;}
+        }
+
+        x = myPosition.getRow();
+        y = myPosition.getColumn() + 1;
+        while (y < 9 && y > 0) {
+            ChessPosition endPosition = new ChessPosition(x, y);
+            if (board.getPiece(endPosition) == null) {
+                axialMoves.add(new ChessMove(myPosition, endPosition, null));
+                y++;
+            } else {break;}
+        }
+
+        x = myPosition.getRow();
+        y = myPosition.getColumn() - 1;
+        while (y < 9 && y > 0) {
+            ChessPosition endPosition = new ChessPosition(x, y);
+            if (board.getPiece(endPosition) == null) {
+                axialMoves.add(new ChessMove(myPosition, endPosition, null));
+                y--;
+            } else {break;}
+        }
+
+        return axialMoves;
+    }
+
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in
@@ -123,7 +169,7 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        Vector<ChessMove> possibleMoves = new Vector<ChessMove>();
+        Vector<ChessMove> possibleMoves = new Vector<>();
 
         if (this.type == PieceType.QUEEN) {
             for (int i = 1; i < 9; i++) {
