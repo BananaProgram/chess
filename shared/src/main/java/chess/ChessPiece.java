@@ -240,6 +240,43 @@ public class ChessPiece {
         return knightMoves;
     }
 
+    private Collection<ChessMove> kingMoves(ChessPosition myPosition, ChessBoard board, ChessGame.TeamColor color) {
+        Vector<ChessMove> kingMoves = new Vector<>();
+        int startRow = myPosition.getRow();
+        int startCol = myPosition.getColumn();
+
+        for (int row = startRow - 1; row < startRow + 2; row++) {
+            for (int col = startCol - 1; col < startCol + 2; col++) {
+                if (row < 9 && row > 0 && col < 9 && col > 0 && !(row == startRow && col == startCol)) {
+                    ChessPosition endPosition = new ChessPosition(row, col);
+                    if (board.getPiece(endPosition) == null || board.getPiece(endPosition).getTeamColor() != color) {
+                        kingMoves.add(new ChessMove(myPosition, endPosition, null));
+                    }
+                }
+            }
+        }
+
+        return kingMoves;
+    }
+
+    private Collection<ChessMove> pawnMoves(ChessPosition myPosition, ChessBoard board, ChessGame.TeamColor color) {
+        Vector<ChessMove> pawnMoves = new Vector<>();
+        int startRow = myPosition.getRow();
+        int startCol = myPosition.getColumn();
+
+        int direction = color == ChessGame.TeamColor.WHITE ? 1 : -1;
+
+        if ((startRow == 2 && color == ChessGame.TeamColor.WHITE) || (startRow == 7 && color == ChessGame.TeamColor.BLACK)) {
+            ChessPosition endPosition = new ChessPosition(startRow + 2 * direction, startCol);
+            if (board.getPiece(endPosition) == null) {
+                pawnMoves.add(new ChessMove(myPosition, endPosition, null));
+            }
+        }
+
+
+        return pawnMoves;
+    }
+
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in
@@ -260,9 +297,9 @@ public class ChessPiece {
         } else if (this.type == PieceType.KNIGHT) {
             possibleMoves.addAll(knightMoves(myPosition, board, this.pieceColor));
         } else if (this.type == PieceType.KING) {
-            return possibleMoves;
+            possibleMoves.addAll(kingMoves(myPosition, board,this.getTeamColor()));
         } else {
-            return possibleMoves;
+            possibleMoves.addAll(pawnMoves(myPosition, board, this.getTeamColor()));
         }
 
         return possibleMoves;
