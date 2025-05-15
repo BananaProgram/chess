@@ -1,6 +1,8 @@
 package chess;
 
 import java.util.Collection;
+import java.util.Objects;
+import java.util.Vector;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -11,11 +13,12 @@ import java.util.Collection;
 public class ChessGame {
 
     private TeamColor teamTurn;
-    private ChessBoard board;
+    private ChessBoard board = new ChessBoard();
 
 
     public ChessGame() {
         teamTurn = TeamColor.WHITE;
+        board.resetBoard();
     }
 
     /**
@@ -50,7 +53,22 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece piece = board.getPiece(startPosition);
+        if (piece == null) {return null;}
+        else {
+            Collection<ChessMove> possibleMoves = piece.pieceMoves(board, startPosition);
+            Collection<ChessMove> validMoves = new Vector<>();
+            for (ChessMove move : possibleMoves) {
+                board.addPiece(move.getStartPosition(), null);
+                board.addPiece(move.getEndPosition(), piece);
+                if (!isInCheck(piece.getTeamColor())) {
+                    validMoves.add(move);
+                }
+                board.addPiece(move.getStartPosition(), piece);
+                board.addPiece(move.getEndPosition(), null);
+            }
+            return validMoves;
+        }
     }
 
     /**
@@ -60,9 +78,11 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
+        Collection<ChessMove> validMoves = validMoves(move.getStartPosition());
+        if (!validMoves.contains(move)) {throw new InvalidMoveException();}
         ChessPiece piece = board.getPiece(move.getStartPosition());
         board.board[8 - move.getStartPosition().getRow()][move.getStartPosition().getColumn() - 1] = null;
-        board.board[8 - move.getEndPosition().getRow()][move.getEndPosition().getColumn()] = piece;
+        board.board[8 - move.getEndPosition().getRow()][move.getEndPosition().getColumn() - 1] = piece;
     }
 
     /**
@@ -72,7 +92,39 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        ChessPosition kingPos = null;
+        int rowN = 1;
+        int colN;
+        for (ChessPiece[] row : board.board) {
+            colN = 1;
+            for (ChessPiece piece : row) {
+                if (piece != null && piece.getPieceType() == ChessPiece.PieceType.KING && piece.getTeamColor() == teamColor) {
+                    kingPos = new ChessPosition(rowN, colN);
+                    break;
+                }
+                colN++;
+            }
+            rowN++;
+        }
+
+        rowN = 1;
+        for (ChessPiece[] row : board.board) {
+            colN = 1;
+            for (ChessPiece piece : row) {
+                if (piece != null && piece.getTeamColor() != teamColor) {
+                    Collection<ChessMove> moves = piece.pieceMoves(board, new ChessPosition(rowN, colN));
+                    for (ChessMove move : moves) {
+                        if (move.getEndPosition().equals(kingPos)) {
+                            return true;
+                        }
+                    }
+                }
+                colN++;
+            }
+            rowN++;
+        }
+
+        return false;
     }
 
     /**
@@ -112,5 +164,19 @@ public class ChessGame {
      */
     public ChessBoard getBoard() {
         return board;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessGame chessGame = (ChessGame) o;
+        return teamTurn == chessGame.teamTurn && Objects.equals(board, chessGame.board);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(teamTurn, board);
     }
 }
