@@ -58,14 +58,29 @@ public class ChessGame {
         else {
             Collection<ChessMove> possibleMoves = piece.pieceMoves(board, startPosition);
             Collection<ChessMove> validMoves = new Vector<>();
+            TeamColor movingTeam = piece.getTeamColor();
             for (ChessMove move : possibleMoves) {
+                ChessPiece movedPiece = board.getPiece(move.getStartPosition());
+                ChessPiece capturedPiece = board.getPiece(move.getEndPosition());
+
+                System.out.println("Board before simulated move:");
+                board.print();
+                System.out.println();
+
                 board.addPiece(move.getStartPosition(), null);
-                board.addPiece(move.getEndPosition(), piece);
-                if (!isInCheck(piece.getTeamColor())) {
+                board.addPiece(move.getEndPosition(), movedPiece);
+
+                System.out.println("Sanity check before calling inCheck");
+                board.print();
+                System.out.println();
+                boolean inCheck = isInCheck(movingTeam);
+
+                board.addPiece(move.getStartPosition(), movedPiece);
+                board.addPiece(move.getEndPosition(), capturedPiece);
+
+                if (!inCheck) {
                     validMoves.add(move);
                 }
-                board.addPiece(move.getStartPosition(), piece);
-                board.addPiece(move.getEndPosition(), null);
             }
             return validMoves;
         }
@@ -92,36 +107,57 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
+        board.print();
+        System.out.println(teamColor);
         ChessPosition kingPos = null;
-        int rowN = 1;
+        int rowN = 8;
         int colN;
         for (ChessPiece[] row : board.board) {
             colN = 1;
             for (ChessPiece piece : row) {
                 if (piece != null && piece.getPieceType() == ChessPiece.PieceType.KING && piece.getTeamColor() == teamColor) {
                     kingPos = new ChessPosition(rowN, colN);
+                    System.out.println("KING'S POSITION");
+                    System.out.println(kingPos);
                     break;
                 }
                 colN++;
             }
-            rowN++;
+            rowN--;
         }
 
-        rowN = 1;
-        for (ChessPiece[] row : board.board) {
-            colN = 1;
-            for (ChessPiece piece : row) {
+        //ChessPosition testPos = new ChessPosition(3, 7);
+        //System.out.println(board.getPiece(testPos));
+
+        for (rowN = 1; rowN < 9; rowN++) {
+            for (colN = 1; colN < 9; colN++) {
+                ChessPosition position = new ChessPosition(rowN, colN);
+                if (rowN == 3 && colN == 7) {
+                    System.out.println(board.getPiece(position));
+                    if (board.getPiece(position) != null) {
+                        System.out.println(board.getPiece(position).getTeamColor());
+                        System.out.println(board.getPiece(position).getTeamColor() != teamColor);
+                    }
+                }
+                ChessPiece piece = board.getPiece(position);
                 if (piece != null && piece.getTeamColor() != teamColor) {
-                    Collection<ChessMove> moves = piece.pieceMoves(board, new ChessPosition(rowN, colN));
+                    if (piece.getPieceType() == ChessPiece.PieceType.KING) {
+                        System.out.println("found the other king");
+                    }
+                    ChessPosition startPos = new ChessPosition(rowN, colN);
+                    System.out.println(startPos);
+                    Collection<ChessMove> moves = piece.pieceMoves(board, startPos);
                     for (ChessMove move : moves) {
+                        if (piece.getPieceType() == ChessPiece.PieceType.QUEEN) {
+                            System.out.println(move.getEndPosition());
+                        }
                         if (move.getEndPosition().equals(kingPos)) {
+                            System.out.println("finally!!!");
                             return true;
                         }
                     }
                 }
-                colN++;
             }
-            rowN++;
         }
 
         return false;
