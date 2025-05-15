@@ -63,7 +63,7 @@ public class ChessPiece {
         return Objects.hash(pieceColor, type);
     }
 
-    private boolean inBounds(int x, int y) {
+    boolean inBounds(int x, int y) {
         return x < 9 && y < 9 && x > 0 && y > 0;
     }
 
