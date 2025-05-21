@@ -5,6 +5,8 @@ import dataaccess.MemoryDataAccess;
 import model.AuthData;
 import model.UserData;
 
+import java.util.Objects;
+
 public class UserService {
 
     private final MemoryDataAccess dataAccess;
@@ -21,5 +23,19 @@ public class UserService {
         UserData user = new UserData(registerRequest.username(), registerRequest.password(), registerRequest.email());
         AuthData response = dataAccess.addUser(user);
         return new RegisterResult(response.username(), response.authToken());
+    }
+
+    public LoginResult login(LoginRequest loginRequest) {
+        UserData existingUser = dataAccess.getUser(loginRequest.username());
+        if (Objects.equals(loginRequest.password(), existingUser.password())) {
+            AuthData response = dataAccess.createAuth(loginRequest.username());
+            return new LoginResult(response.username(), response.authToken());
+        } else {
+            return new LoginResult("wrong", "wrong");
+        }
+    }
+
+    public void logout(String authToken) {
+        dataAccess.deleteAuth(authToken);
     }
 }
