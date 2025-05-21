@@ -33,6 +33,7 @@ public class Server {
         Spark.delete("/session", this::logout);
         Spark.get("/game", this::listGames);
         Spark.post("/game", this::createGame);
+        Spark.put("/game", this::joinGame);
 
         Spark.awaitInitialization();
         return Spark.port();
@@ -78,5 +79,12 @@ public class Server {
         var gameRequest = new Gson().fromJson(req.body(), NewGameRequest.class);
         var result = gameService.createGame(authToken, gameRequest);
         return new Gson().toJson(result);
+    }
+
+    private Object joinGame(Request req, Response res) {
+        var authToken = req.headers("authorization");
+        var joinRequest = new Gson().fromJson(req.body(), JoinRequest.class);
+        gameService.joinGame(authToken, joinRequest);
+        return "{}";
     }
 }
