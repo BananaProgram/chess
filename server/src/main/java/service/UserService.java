@@ -20,6 +20,9 @@ public class UserService {
     }
 
     public RegisterResult register(RegisterRequest registerRequest) {
+        if (registerRequest.username() == null || registerRequest.password() == null || registerRequest.email() == null) {
+            return new RegisterResult(null, null, "Error: bad request");
+        }
         if (dataAccess.getUser(registerRequest.username()) != null) {
             return new RegisterResult(null, null, "Error: already taken");
         }
@@ -45,7 +48,11 @@ public class UserService {
         }
     }
 
-    public void logout(String authToken) {
+    public ErrorMessage logout(String authToken) {
+        if (dataAccess.findUser(authToken) == null) {
+            return new ErrorMessage("Error: unauthorized");
+        }
         dataAccess.deleteAuth(authToken);
+        return new ErrorMessage(null);
     }
 }
