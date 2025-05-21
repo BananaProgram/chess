@@ -3,6 +3,7 @@ package server;
 import dataaccess.DataAccessException;
 import dataaccess.MemoryDataAccess;
 import model.*;
+import service.GameService;
 import service.LoginRequest;
 import service.RegisterRequest;
 import service.UserService;
@@ -12,7 +13,9 @@ import spark.Spark;
 import com.google.gson.Gson;
 
 public class Server {
-    private final UserService userService = new UserService(new MemoryDataAccess());
+    MemoryDataAccess dataAccess = new MemoryDataAccess();
+    private final UserService userService = new UserService(dataAccess);
+    private final GameService gameService = new GameService(dataAccess);
 
     public Server() {
     }
@@ -31,6 +34,7 @@ public class Server {
         Spark.delete("/db", this::clear);
         Spark.post("/session", this::login);
         Spark.delete("/session", this::logout);
+        Spark.get("/game", this::listGames);
 
         Spark.awaitInitialization();
         return Spark.port();
@@ -63,5 +67,11 @@ public class Server {
         var authToken = req.headers("authorization");
         userService.logout(authToken);
         return "{}";
+    }
+
+    private Object listGames(Request req, Response res) {
+        var authToken = req.headers("authorization");
+        var result = gameService.listGames(authToken);
+        return new Gson().toJson(result);
     }
 }
