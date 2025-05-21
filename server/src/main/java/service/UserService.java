@@ -27,11 +27,18 @@ public class UserService {
 
     public LoginResult login(LoginRequest loginRequest) {
         UserData existingUser = dataAccess.getUser(loginRequest.username());
+        if (loginRequest.username() == null || loginRequest.password() == null) {
+            return new LoginResult(null, null, "Error: bad request");
+        }
+        if (existingUser == null) {
+            return new LoginResult(null, null, "Error: unauthorized");
+        }
         if (Objects.equals(loginRequest.password(), existingUser.password())) {
+            System.out.println(loginRequest);
             AuthData response = dataAccess.createAuth(loginRequest.username());
-            return new LoginResult(response.username(), response.authToken());
+            return new LoginResult(response.username(), response.authToken(), null);
         } else {
-            return new LoginResult("wrong", "wrong");
+            return new LoginResult(null, null, "Error: unauthorized");
         }
     }
 
