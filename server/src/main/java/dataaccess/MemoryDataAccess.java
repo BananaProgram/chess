@@ -27,8 +27,9 @@ public class MemoryDataAccess implements DataAccess {
 
     public AuthData addUser(UserData user) {
         user = new UserData(user.username(), user.password(), user.password());
-        String token = generateToken();
+        users.put(user.username(), user);
 
+        String token = generateToken();
         AuthData authData = new AuthData(token, user.username());
         authTokens.put(token, user.username());
         return authData;
