@@ -17,4 +17,9 @@ public class GameService {
         List<GameData> games = dataAccess.listGames();
         return new ListGamesResult(games);
     }
+
+    public NewGameResult createGame(String authToken, NewGameRequest request) {
+        int gameID = dataAccess.addGame(request);
+        return new NewGameResult(gameID);
+    }
 }
