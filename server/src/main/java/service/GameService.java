@@ -33,6 +33,9 @@ public class GameService {
 
     public ErrorMessage joinGame(String authToken, JoinRequest request) {
         String username = dataAccess.findUser(authToken);
+        if (username == null) {
+            return new ErrorMessage("Error: unauthorized");
+        }
         GameData game = dataAccess.findGame(request.gameID());
         if (game == null || request.playerColor() == null || !(request.playerColor().equals("WHITE") || request.playerColor().equals("BLACK"))) {
             return new ErrorMessage("Error: bad request");

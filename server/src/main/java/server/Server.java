@@ -110,7 +110,16 @@ public class Server {
     private Object joinGame(Request req, Response res) {
         var authToken = req.headers("authorization");
         var joinRequest = new Gson().fromJson(req.body(), JoinRequest.class);
-        gameService.joinGame(authToken, joinRequest);
-        return "{}";
+        var result = gameService.joinGame(authToken, joinRequest);
+        if (result.message() != null) {
+            if (result.message().equals("Error: already taken")) {
+                res.status(403);
+            } else if (result.message().equals("Error: bad request")) {
+                res.status(400);
+            } else if (result.message().equals("Error: unauthorized")) {
+                res.status(401);
+            }
+        }
+        return new Gson().toJson(result);
     }
 }
