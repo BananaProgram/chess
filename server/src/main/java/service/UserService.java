@@ -20,9 +20,12 @@ public class UserService {
     }
 
     public RegisterResult register(RegisterRequest registerRequest) {
+        if (dataAccess.getUser(registerRequest.username()) != null) {
+            return new RegisterResult(null, null, "Error: already taken");
+        }
         UserData user = new UserData(registerRequest.username(), registerRequest.password(), registerRequest.email());
         AuthData response = dataAccess.addUser(user);
-        return new RegisterResult(response.username(), response.authToken());
+        return new RegisterResult(response.username(), response.authToken(), null);
     }
 
     public LoginResult login(LoginRequest loginRequest) {
