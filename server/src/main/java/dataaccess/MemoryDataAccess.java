@@ -84,4 +84,8 @@ public class MemoryDataAccess implements DataAccess {
         games.remove(gameID);
         games.put(gameID, newGame);
     }
+
+    public GameData findGame(int gameID) {
+        return games.get(gameID);
+    }
 }
