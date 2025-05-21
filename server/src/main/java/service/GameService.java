@@ -22,4 +22,9 @@ public class GameService {
         int gameID = dataAccess.addGame(request);
         return new NewGameResult(gameID);
     }
+
+    public void joinGame(String authToken, JoinRequest request) {
+        String username = dataAccess.findUser(authToken);
+        dataAccess.joinGame(request.gameID(), username, request.playerColor());
+    }
 }
