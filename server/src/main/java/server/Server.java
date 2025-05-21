@@ -3,6 +3,7 @@ package server;
 import dataaccess.DataAccessException;
 import dataaccess.MemoryDataAccess;
 import model.*;
+import service.LoginRequest;
 import service.RegisterRequest;
 import service.UserService;
 import spark.Request;
@@ -28,6 +29,8 @@ public class Server {
 
         Spark.post("/user", this::register);
         Spark.delete("/db", this::clear);
+        Spark.post("/session", this::login);
+        Spark.delete("/session", this::logout);
 
         Spark.awaitInitialization();
         return Spark.port();
@@ -46,7 +49,18 @@ public class Server {
 
     private Object clear(Request req, Response res) {
         userService.clear();
-        res.status(200);
+        //res.status(200);
+        return "{}";
+    }
+
+    private Object login(Request req, Response res) {
+        var user = new Gson().fromJson(req.body(), LoginRequest.class);
+        var result = userService.login(user);
+        return new Gson().toJson(result);
+    }
+
+    private Object logout(Request req, Response res) {
+        var authToken = req.headers("authorization");
         return "{}";
     }
 }
