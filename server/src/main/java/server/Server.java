@@ -47,6 +47,11 @@ public class Server {
     private Object register(Request req, Response res) throws DataAccessException {
         var user = new Gson().fromJson(req.body(), RegisterRequest.class);
         var result = userService.register(user);
+        if (result.message() != null) {
+            if (result.message().equals("Error: already taken")) {
+                res.status(403);
+            }
+        }
         return new Gson().toJson(result);
     }
 
