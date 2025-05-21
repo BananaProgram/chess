@@ -59,6 +59,13 @@ public class Server {
     private Object login(Request req, Response res) {
         var user = new Gson().fromJson(req.body(), LoginRequest.class);
         var result = userService.login(user);
+        if (result.message() != null) {
+            if (result.message().equals("Error: unauthorized")) {
+                res.status(401);
+            } else if (result.message().equals("Error: bad request")) {
+                res.status(400);
+            }
+        }
         return new Gson().toJson(result);
     }
 
