@@ -1,5 +1,6 @@
 package service;
 
+import dataaccess.DataAccessException;
 import dataaccess.MemoryDataAccess;
 import model.GameData;
 
@@ -19,12 +20,23 @@ public class GameService {
     }
 
     public NewGameResult createGame(String authToken, NewGameRequest request) {
+        if (dataAccess.findUser(authToken) == null) {
+            return new NewGameResult(null,"Error: unauthorized");
+        }
+        if (request.gameName() == null) {
+            return new NewGameResult(null, "Error: bad request");
+        }
         int gameID = dataAccess.addGame(request);
-        return new NewGameResult(gameID);
+        return new NewGameResult(gameID, null);
     }
 
-    public void joinGame(String authToken, JoinRequest request) {
+    public ErrorMessage joinGame(String authToken, JoinRequest request) {
         String username = dataAccess.findUser(authToken);
+        GameData game = dataAccess.findGame(request.gameID());
+        if (game == null) {
+            return new ErrorMessage("Error: bad request");
+        }
         dataAccess.joinGame(request.gameID(), username, request.playerColor());
+        return new ErrorMessage(null);
     }
 }
