@@ -61,6 +61,7 @@ public class Server {
 
     private Object logout(Request req, Response res) {
         var authToken = req.headers("authorization");
+        userService.logout(authToken);
         return "{}";
     }
 }
