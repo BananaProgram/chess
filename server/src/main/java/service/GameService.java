@@ -16,8 +16,11 @@ public class GameService {
     }
 
     public ListGamesResult listGames(String authToken) {
+        if (dataAccess.findUser(authToken) == null) {
+            return new ListGamesResult(null, "Error: unauthorized");
+        }
         List<GameData> games = dataAccess.listGames();
-        return new ListGamesResult(games);
+        return new ListGamesResult(games, null);
     }
 
     public NewGameResult createGame(String authToken, NewGameRequest request) {
@@ -44,7 +47,6 @@ public class GameService {
                 (Objects.equals(request.playerColor(), "BLACK") && game.blackUsername() != null)) {
             return new ErrorMessage("Error: already taken");
         }
-        System.out.println(request.playerColor());
         dataAccess.joinGame(request.gameID(), username, request.playerColor());
         return new ErrorMessage(null);
     }

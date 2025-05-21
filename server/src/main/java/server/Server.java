@@ -90,6 +90,11 @@ public class Server {
     private Object listGames(Request req, Response res) {
         var authToken = req.headers("authorization");
         var result = gameService.listGames(authToken);
+        if (result.message() != null) {
+            if (result.message().equals("Error: unauthorized")) {
+                res.status(401);
+            }
+        }
         return new Gson().toJson(result);
     }
 

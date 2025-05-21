@@ -40,7 +40,6 @@ public class UserService {
             return new LoginResult(null, null, "Error: unauthorized");
         }
         if (Objects.equals(loginRequest.password(), existingUser.password())) {
-            System.out.println(loginRequest);
             AuthData response = dataAccess.createAuth(loginRequest.username());
             return new LoginResult(response.username(), response.authToken(), null);
         } else {
