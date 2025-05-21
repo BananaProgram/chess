@@ -21,6 +21,8 @@ public class MemoryDataAccess implements DataAccess {
     public void clear() {
         users = new HashMap<>();
         authTokens = new HashMap<>();
+        games = new HashMap<>();
+        gameID = 1;
     }
 
     public static String generateToken() {
@@ -55,7 +57,7 @@ public class MemoryDataAccess implements DataAccess {
     public List<GameData> listGames() {
         List<GameData> gameList = new ArrayList<>();
 
-        for (int i = 0; i < gameID; i++) {
+        for (int i = 1; i < gameID; i++) {
             gameList.add(games.get(i));
         }
 
