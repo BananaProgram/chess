@@ -1,6 +1,10 @@
 package service;
 
 import dataaccess.MemoryDataAccess;
+import model.GameData;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class GameService {
     private final MemoryDataAccess dataAccess;
@@ -9,7 +13,8 @@ public class GameService {
         this.dataAccess = dataAccess;
     }
 
-    public void clear() {
-        dataAccess.clear();
+    public ListGamesResult listGames(String authToken) {
+        List<GameData> games = dataAccess.listGames();
+        return new ListGamesResult(games);
     }
 }
