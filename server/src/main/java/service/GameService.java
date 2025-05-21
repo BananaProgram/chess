@@ -6,6 +6,7 @@ import model.GameData;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class GameService {
     private final MemoryDataAccess dataAccess;
@@ -33,9 +34,14 @@ public class GameService {
     public ErrorMessage joinGame(String authToken, JoinRequest request) {
         String username = dataAccess.findUser(authToken);
         GameData game = dataAccess.findGame(request.gameID());
-        if (game == null) {
+        if (game == null || request.playerColor() == null || !(request.playerColor().equals("WHITE") || request.playerColor().equals("BLACK"))) {
             return new ErrorMessage("Error: bad request");
         }
+        if ((Objects.equals(request.playerColor(), "WHITE") && game.whiteUsername() != null) ||
+                (Objects.equals(request.playerColor(), "BLACK") && game.blackUsername() != null)) {
+            return new ErrorMessage("Error: already taken");
+        }
+        System.out.println(request.playerColor());
         dataAccess.joinGame(request.gameID(), username, request.playerColor());
         return new ErrorMessage(null);
     }
