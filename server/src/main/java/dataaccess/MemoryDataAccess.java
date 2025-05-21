@@ -6,10 +6,7 @@ import model.GameData;
 import model.UserData;
 import service.NewGameRequest;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.HashMap;
+import java.util.*;
 
 public class MemoryDataAccess implements DataAccess {
     private HashMap<String, UserData> users = new HashMap<>();
@@ -69,5 +66,22 @@ public class MemoryDataAccess implements DataAccess {
         gameID++;
         games.put(game.gameID(), game);
         return game.gameID();
+    }
+
+    public String findUser(String authToken) {
+        return authTokens.get(authToken);
+    }
+
+    public void joinGame(int gameID, String username, String color) {
+        GameData game = games.get(gameID);
+        GameData newGame;
+
+        if (Objects.equals(color, "WHITE")) {
+            newGame = new GameData(gameID, username, game.blackUsername(), game.gameName(), game.game());
+        } else {
+            newGame = new GameData(gameID, game.whiteUsername(), username, game.gameName(), game.game());
+        }
+        games.remove(gameID);
+        games.put(gameID, newGame);
     }
 }
