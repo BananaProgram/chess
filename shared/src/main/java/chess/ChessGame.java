@@ -129,7 +129,7 @@ public class ChessGame {
                 if (piece != null && piece.getTeamColor() != teamColor) {
                     ChessPosition startPos = new ChessPosition(rowN, colN);
                     Collection<ChessMove> moves = piece.pieceMoves(board, startPos);
-                    for (ChessMove move : moves) {return move.getEndPosition().equals(kingPos);}
+                    for (ChessMove move : moves) {if (move.getEndPosition().equals(kingPos)) {return true;}}
                 }
             }
         }
