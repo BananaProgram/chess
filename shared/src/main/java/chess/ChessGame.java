@@ -126,11 +126,12 @@ public class ChessGame {
             for (colN = 1; colN < 9; colN++) {
                 ChessPosition position = new ChessPosition(rowN, colN);
                 ChessPiece piece = board.getPiece(position);
-                if (piece != null && piece.getTeamColor() != teamColor) {
-                    ChessPosition startPos = new ChessPosition(rowN, colN);
-                    Collection<ChessMove> moves = piece.pieceMoves(board, startPos);
-                    for (ChessMove move : moves) {if (move.getEndPosition().equals(kingPos)) {return true;}}
+                if (piece == null || piece.getTeamColor() == teamColor) {
+                    continue;
                 }
+                ChessPosition startPos = new ChessPosition(rowN, colN);
+                Collection<ChessMove> moves = piece.pieceMoves(board, startPos);
+                for (ChessMove move : moves) {if (move.getEndPosition().equals(kingPos)) {return true;}}
             }
         }
 
