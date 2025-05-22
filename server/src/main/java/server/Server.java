@@ -57,44 +57,41 @@ public class Server {
         return new Gson().toJson(result);
     }
 
+    private void handleErrors(Response res, String message) {
+        if (message != null) {
+            if (message.equals("Error: already taken")) {
+                res.status(403);
+            } else if (message.equals("Error: bad request")) {
+                res.status(400);
+            } else if (message.equals("Error: unauthorized")) {
+                res.status(401);
+            }
+        }
+    }
+
     private Object clear(Request req, Response res) {
         userService.clear();
-        //res.status(200);
         return "{}";
     }
 
     private Object login(Request req, Response res) {
         var user = new Gson().fromJson(req.body(), LoginRequest.class);
         var result = userService.login(user);
-        if (result.message() != null) {
-            if (result.message().equals("Error: unauthorized")) {
-                res.status(401);
-            } else if (result.message().equals("Error: bad request")) {
-                res.status(400);
-            }
-        }
+        handleErrors(res, result.message());
         return new Gson().toJson(result);
     }
 
     private Object logout(Request req, Response res) {
         var authToken = req.headers("authorization");
         var result = userService.logout(authToken);
-        if (result.message() != null) {
-            if (result.message().equals("Error: unauthorized")) {
-                res.status(401);
-            }
-        }
+        handleErrors(res, result.message());
         return new Gson().toJson(result);
     }
 
     private Object listGames(Request req, Response res) {
         var authToken = req.headers("authorization");
         var result = gameService.listGames(authToken);
-        if (result.message() != null) {
-            if (result.message().equals("Error: unauthorized")) {
-                res.status(401);
-            }
-        }
+        handleErrors(res, result.message());
         return new Gson().toJson(result);
     }
 
@@ -102,13 +99,7 @@ public class Server {
         var authToken = req.headers("authorization");
         var gameRequest = new Gson().fromJson(req.body(), NewGameRequest.class);
         var result = gameService.createGame(authToken, gameRequest);
-        if (result.message() != null) {
-            if (result.message().equals("Error: unauthorized")) {
-                res.status(401);
-            } else if (result.message().equals("Error: bad request")) {
-                res.status(400);
-            }
-        }
+        handleErrors(res, result.message());
         return new Gson().toJson(result);
     }
 
@@ -116,15 +107,7 @@ public class Server {
         var authToken = req.headers("authorization");
         var joinRequest = new Gson().fromJson(req.body(), JoinRequest.class);
         var result = gameService.joinGame(authToken, joinRequest);
-        if (result.message() != null) {
-            if (result.message().equals("Error: already taken")) {
-                res.status(403);
-            } else if (result.message().equals("Error: bad request")) {
-                res.status(400);
-            } else if (result.message().equals("Error: unauthorized")) {
-                res.status(401);
-            }
-        }
+        handleErrors(res, result.message());
         return new Gson().toJson(result);
     }
 }
