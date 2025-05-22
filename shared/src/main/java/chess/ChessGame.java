@@ -141,6 +141,19 @@ public class ChessGame {
         return false;
     }
 
+    private List<ChessPosition> getPieces(TeamColor color) {
+        List<ChessPosition> pieces = new ArrayList<>();
+        for (int row = 1; row < 9; row++) {
+            for (int col = 1; col < 9; col++) {
+                ChessPosition position = new ChessPosition(row, col);
+                if (board.getPiece(position) != null && board.getPiece(position).getTeamColor() == color) {
+                    pieces.add(position);
+                }
+            }
+        }
+        return pieces;
+    }
+
     /**
      * Determines if the given team is in checkmate
      *
@@ -148,20 +161,12 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        List<ChessPosition> pieces = new ArrayList<>();
 
         if (!isInCheck(teamColor)) {
             return false;
         }
 
-        for (int row = 1; row < 9; row++) {
-            for (int col = 1; col < 9; col++) {
-                ChessPosition position = new ChessPosition(row, col);
-                if (board.getPiece(position) != null && board.getPiece(position).getTeamColor() == teamColor) {
-                    pieces.add(position);
-                }
-            }
-        }
+        List<ChessPosition> pieces = getPieces(teamColor);
 
         for (ChessPosition position : pieces) {
             if (!validMoves(position).isEmpty()) {
@@ -182,15 +187,8 @@ public class ChessGame {
         if (isInCheckmate(teamColor)) {
             return false;
         }
-        List<ChessPosition> pieces = new ArrayList<>();
-        for (int row = 1; row < 9; row++) {
-            for (int col = 1; col < 9; col++) {
-                ChessPosition position = new ChessPosition(row, col);
-                if (board.getPiece(position) != null && board.getPiece(position).getTeamColor() == teamColor) {
-                    pieces.add(position);
-                }
-            }
-        }
+
+        List<ChessPosition> pieces = getPieces(teamColor);
 
         for (ChessPosition position : pieces) {
             if (!validMoves(position).isEmpty()) {
