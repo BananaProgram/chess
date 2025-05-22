@@ -67,7 +67,8 @@ public class ChessPiece {
         return x < 9 && y < 9 && x > 0 && y > 0;
     }
 
-    private Collection<ChessMove> checkLine(ChessPosition myPosition, ChessBoard board, ChessGame.TeamColor color, Function<Integer, Integer> rowFunc, Function<Integer, Integer> colFunc) {
+    private Collection<ChessMove> checkLine(ChessPosition myPosition, ChessBoard board, ChessGame.TeamColor color,
+                                            Function<Integer, Integer> rowFunc, Function<Integer, Integer> colFunc) {
         int x = rowFunc.apply(myPosition.getRow());
         int y = colFunc.apply(myPosition.getColumn());
         Vector<ChessMove> lineMoves = new Vector<>();
