@@ -14,10 +14,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import static dataaccess.DatabaseManager.createDatabase;
-import static dataaccess.DatabaseManager.getConnection;
+import static dataaccess.DatabaseManager.*;
 
 public class SQLDataAccess implements DataAccess{
+
+    static {
+        loadPropertiesFromResources();
+        System.out.println("Loaded database name: " + DatabaseManager.databaseName);
+
+    }
 
     public static void configureDatabase() throws SQLException {
         try {
@@ -26,7 +31,7 @@ public class SQLDataAccess implements DataAccess{
             throw new RuntimeException(e);
         }
         try (var conn = getConnection()) {
-            conn.setCatalog("chess");
+            conn.setCatalog(DatabaseManager.databaseName);
 
             var createUserTable = """
             CREATE TABLE  IF NOT EXISTS users (

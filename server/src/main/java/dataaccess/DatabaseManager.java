@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class DatabaseManager {
-    private static String databaseName;
+    static String databaseName;
     private static String dbUsername;
     private static String dbPassword;
     private static String connectionUrl;
@@ -54,7 +54,7 @@ public class DatabaseManager {
         }
     }
 
-    private static void loadPropertiesFromResources() {
+    static void loadPropertiesFromResources() {
         try (var propStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("db.properties")) {
             if (propStream == null) {
                 throw new Exception("Unable to load db.properties");
@@ -62,6 +62,7 @@ public class DatabaseManager {
             Properties props = new Properties();
             props.load(propStream);
             loadProperties(props);
+            System.out.println(databaseName);
         } catch (Exception ex) {
             throw new RuntimeException("unable to process db.properties", ex);
         }
