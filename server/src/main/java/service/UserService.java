@@ -2,6 +2,7 @@ package service;
 
 import dataaccess.DataAccess;
 import dataaccess.MemoryDataAccess;
+import dataaccess.SQLDataAccess;
 import model.AuthData;
 import model.UserData;
 
@@ -9,9 +10,9 @@ import java.util.Objects;
 
 public class UserService {
 
-    private final MemoryDataAccess dataAccess;
+    private final SQLDataAccess dataAccess;
 
-    public UserService(MemoryDataAccess dataAccess) {
+    public UserService(SQLDataAccess dataAccess) {
         this.dataAccess = dataAccess;
     }
 
