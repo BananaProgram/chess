@@ -2,6 +2,7 @@ package server;
 
 import dataaccess.DataAccessException;
 import dataaccess.MemoryDataAccess;
+import dataaccess.SQLDataAccess;
 import model.*;
 import service.*;
 import spark.Request;
@@ -9,8 +10,10 @@ import spark.Response;
 import spark.Spark;
 import com.google.gson.Gson;
 
+import java.sql.SQLException;
+
 public class Server {
-    MemoryDataAccess dataAccess = new MemoryDataAccess();
+    SQLDataAccess dataAccess = new SQLDataAccess();
     private final UserService userService = new UserService(dataAccess);
     private final GameService gameService = new GameService(dataAccess);
 
@@ -22,10 +25,15 @@ public class Server {
 
         Spark.staticFiles.location("web");
 
+        try {
+            SQLDataAccess.configureDatabase();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to configure database", e);
+        }
+
         // Register your endpoints and handle exceptions here.
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
-        Spark.init();
 
         Spark.post("/user", this::register);
         Spark.delete("/db", this::clear);
