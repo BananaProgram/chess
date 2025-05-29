@@ -207,13 +207,17 @@ public class SQLDataAccess implements DataAccess{
         List<GameData> gameList = new ArrayList<>();
 
         try (var conn = getConnection()) {
-            try (var preparedStatement = conn.prepareStatement("SELECT game FROM games")) {
+            try (var preparedStatement = conn.prepareStatement("SELECT id, whiteusername, blackusername, gamename, game FROM games")) {
                 try (var rs = preparedStatement.executeQuery()) {
                     while (rs.next()) {
                         var json = rs.getString("game");
-                        var game = new Gson().fromJson(json, GameData.class);
+                        var game = new Gson().fromJson(json, ChessGame.class);
+                        var id = rs.getInt("id");
+                        var whiteUsername = rs.getString("whiteusername");
+                        var blackusername = rs.getString("blackusername");
+                        var name = rs.getString("gamename");
 
-                        gameList.add(game);
+                        gameList.add(new GameData(id, whiteUsername, blackusername, name, game));
                     }
                 }
             } catch (SQLException e) {
@@ -223,6 +227,7 @@ public class SQLDataAccess implements DataAccess{
             throw new RuntimeException(e);
         }
 
+        System.out.println(gameList.size());
         return gameList;
     }
 
@@ -237,7 +242,14 @@ public class SQLDataAccess implements DataAccess{
                 preparedStatement.setString(1, request.gameName());
                 preparedStatement.setString(2, new Gson().toJson(game));
 
-                preparedStatement.executeUpdate();
+                int affectedRows = preparedStatement.executeUpdate();
+                System.out.println(affectedRows);
+                try (var rsCheck = conn.createStatement().executeQuery("SELECT COUNT(*) FROM games")) {
+                    if (rsCheck.next()) {
+                        System.out.println("Games count after insert: " + rsCheck.getInt(1));
+                    }
+                }
+
                 try (var rs = preparedStatement.getGeneratedKeys()) {
                     if (rs.next()) {
                         gameID = rs.getInt(1); // ID of inserted game
@@ -256,7 +268,6 @@ public class SQLDataAccess implements DataAccess{
     }
 
     public String findUser(String authToken) {
-        UserData user = null;
         String username = null;
 
         try (var conn = getConnection()) {
