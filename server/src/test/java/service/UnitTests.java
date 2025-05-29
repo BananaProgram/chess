@@ -2,12 +2,13 @@ package service;
 
 import dataaccess.DataAccess;
 import dataaccess.MemoryDataAccess;
+import dataaccess.SQLDataAccess;
 import model.GameData;
 import org.junit.jupiter.api.*;
 
 public class UnitTests {
 
-    private MemoryDataAccess dataAccess = new MemoryDataAccess();
+    private SQLDataAccess dataAccess = new SQLDataAccess();
     private UserService userService = new UserService(dataAccess);
     private GameService gameService = new GameService(dataAccess);
 
