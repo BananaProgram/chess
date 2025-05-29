@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 import service.NewGameRequest;
 
 import java.sql.Connection;
@@ -116,10 +117,11 @@ public class SQLDataAccess implements DataAccess{
     }
 
     public AuthData addUser(UserData user) {
+        String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
         try (var conn = getConnection()) {
             try (var preparedStatement = conn.prepareStatement("INSERT INTO users (username, password, email) VALUES (?, ?, ?)")) {
                 preparedStatement.setString(1, user.username());
-                preparedStatement.setString(2, user.password());
+                preparedStatement.setString(2, hashedPassword);
                 preparedStatement.setString(3, user.email());
 
                 preparedStatement.executeUpdate();
@@ -214,10 +216,10 @@ public class SQLDataAccess implements DataAccess{
                         var game = new Gson().fromJson(json, ChessGame.class);
                         var id = rs.getInt("id");
                         var whiteUsername = rs.getString("whiteusername");
-                        var blackusername = rs.getString("blackusername");
+                        var blackUsername = rs.getString("blackusername");
                         var name = rs.getString("gamename");
 
-                        gameList.add(new GameData(id, whiteUsername, blackusername, name, game));
+                        gameList.add(new GameData(id, whiteUsername, blackUsername, name, game));
                     }
                 }
             } catch (SQLException e) {

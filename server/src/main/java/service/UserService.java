@@ -5,6 +5,7 @@ import dataaccess.MemoryDataAccess;
 import dataaccess.SQLDataAccess;
 import model.AuthData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Objects;
 
@@ -51,7 +52,7 @@ public class UserService {
             if (existingUser == null) {
                 return new LoginResult(null, null, "Error: unauthorized");
             }
-            if (Objects.equals(loginRequest.password(), existingUser.password())) {
+            if (BCrypt.checkpw(loginRequest.password(), existingUser.password())) {
                 AuthData response = dataAccess.createAuth(loginRequest.username());
                 return new LoginResult(response.username(), response.authToken(), null);
             } else {
