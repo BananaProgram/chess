@@ -2,6 +2,7 @@ package service;
 
 import dataaccess.DataAccessException;
 import dataaccess.MemoryDataAccess;
+updimport dataaccess.SQLDataAccess;
 import model.GameData;
 
 import java.util.HashMap;
@@ -9,9 +10,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class GameService {
-    private final MemoryDataAccess dataAccess;
+    private final SQLDataAccess dataAccess;
 
-    public GameService(MemoryDataAccess dataAccess) {
+    public GameService(SQLDataAccess dataAccess) {
         this.dataAccess = dataAccess;
     }
 
