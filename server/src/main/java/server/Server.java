@@ -52,19 +52,6 @@ public class Server {
         Spark.awaitStop();
     }
 
-    private Object register(Request req, Response res) throws DataAccessException {
-        var user = new Gson().fromJson(req.body(), RegisterRequest.class);
-        var result = userService.register(user);
-        if (result.message() != null) {
-            if (result.message().equals("Error: already taken")) {
-                res.status(403);
-            } else if (result.message().equals("Error: bad request")) {
-                res.status(400);
-            }
-        }
-        return new Gson().toJson(result);
-    }
-
     private void handleErrors(Response res, String message) {
         if (message != null) {
             if (message.equals("Error: already taken")) {
@@ -73,13 +60,23 @@ public class Server {
                 res.status(400);
             } else if (message.equals("Error: unauthorized")) {
                 res.status(401);
+            } else if (message.equals("Internal Server Error")) {
+                res.status(500);
             }
         }
     }
 
+    private Object register(Request req, Response res) throws DataAccessException {
+        var user = new Gson().fromJson(req.body(), RegisterRequest.class);
+        var result = userService.register(user);
+        handleErrors(res, result.message());
+        return new Gson().toJson(result);
+    }
+
     private Object clear(Request req, Response res) {
-        userService.clear();
-        return "{}";
+        var result = userService.clear();
+        handleErrors(res, result.message());
+        return new Gson().toJson(result);
     }
 
     private Object login(Request req, Response res) {
