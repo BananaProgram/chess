@@ -1,7 +1,5 @@
-package server;
+package dataaccess;
 
-import dataaccess.DataAccessException;
-import dataaccess.SQLDataAccess;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
