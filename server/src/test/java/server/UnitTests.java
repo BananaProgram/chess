@@ -166,4 +166,17 @@ public class UnitTests {
     public void findUserFail() {
         Assertions.assertNull(dataAccess.findUser("test"));
     }
+
+    @Test
+    @DisplayName("findGame - SUCCESS")
+    public void findGameSucceed() {
+        var data = dataAccess.addGame(new NewGameRequest("testgame"));
+        Assertions.assertEquals("testgame", dataAccess.findGame(data).gameName());
+    }
+
+    @Test
+    @DisplayName("findGame - FAIL")
+    public void findGameFail() {
+        Assertions.assertNull(dataAccess.findGame(5));
+    }
 }
