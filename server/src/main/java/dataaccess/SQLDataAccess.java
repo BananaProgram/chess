@@ -46,9 +46,9 @@ public class SQLDataAccess implements DataAccess{
             var createGameTable = """
             CREATE TABLE  IF NOT EXISTS games (
                 id INT NOT NULL AUTO_INCREMENT,
-                whiteusername VARCHAR(255),
-                blackusername VARCHAR(255),
-                gamename VARCHAR(255) NOT NULL,
+                whiteusername VARCHAR(255) DEFAULT NULL,
+                blackusername VARCHAR(255) DEFAULT NULL,
+                gamename VARCHAR(255) NOT NULL UNIQUE,
                 game longtext NOT NULL,
                 PRIMARY KEY (id)
             )""";
@@ -225,27 +225,24 @@ public class SQLDataAccess implements DataAccess{
         int gameID = 0;
 
         try (var conn = getConnection()) {
-            try (var preparedStatement = conn.prepareStatement("INSERT INTO games (gamename, game) VALUES (?, ?)")) {
+            System.out.println("Connected!");
+            try (var preparedStatement = conn.prepareStatement("INSERT INTO games (gamename, game) VALUES (?, ?)",
+                    java.sql.Statement.RETURN_GENERATED_KEYS)) {
                 var game = new ChessGame();
                 preparedStatement.setString(1, request.gameName());
                 preparedStatement.setString(2, new Gson().toJson(game));
 
                 preparedStatement.executeUpdate();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-
-
-            try (var preparedStatement = conn.prepareStatement("SELECT id FROM games WHERE gamename=?")) {
-                preparedStatement.setString(1, request.gameName());
-                try (var rs = preparedStatement.executeQuery()) {
-                    while (rs.next()) {
-                        gameID = rs.getInt("id");
+                try (var rs = preparedStatement.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        gameID = rs.getInt(1); // ID of inserted game
                     }
                 }
             } catch (SQLException e) {
+                System.out.println("SQL Error!" + e.getMessage());
                 throw new RuntimeException(e);
             }
+
         } catch (SQLException | DataAccessException e) {
             throw new RuntimeException(e);
         }
