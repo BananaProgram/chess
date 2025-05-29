@@ -62,7 +62,6 @@ public class DatabaseManager {
             Properties props = new Properties();
             props.load(propStream);
             loadProperties(props);
-            System.out.println(databaseName);
         } catch (Exception ex) {
             throw new RuntimeException("unable to process db.properties", ex);
         }

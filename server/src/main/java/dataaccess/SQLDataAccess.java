@@ -8,7 +8,6 @@ import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
 import service.NewGameRequest;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +20,6 @@ public class SQLDataAccess implements DataAccess{
 
     static {
         loadPropertiesFromResources();
-        System.out.println("Loaded database name: " + DatabaseManager.databaseName);
-
     }
 
     public static void configureDatabase() throws SQLException {
@@ -79,12 +76,10 @@ public class SQLDataAccess implements DataAccess{
     }
 
     public void clear(){
-        System.out.println("Reached the data access file");
         try (var conn = getConnection()) {
             try (var preparedStatement = conn.prepareStatement("TRUNCATE TABLE users")) {
                 preparedStatement.execute();
             } catch (SQLException e) {
-                System.out.println("SQL Exception!");
                 throw new RuntimeException(e);
             }
         } catch (SQLException | DataAccessException e) {
@@ -196,7 +191,10 @@ public class SQLDataAccess implements DataAccess{
         try (var conn = getConnection()) {
             try (var preparedStatement = conn.prepareStatement("DELETE FROM auth WHERE token=?")) {
                 preparedStatement.setString(1, authData);
-                preparedStatement.executeUpdate();
+                int numAffected = preparedStatement.executeUpdate();
+                if (numAffected == 0) {
+                    throw new RuntimeException("No auth token found to delete");
+                }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -229,7 +227,6 @@ public class SQLDataAccess implements DataAccess{
             throw new RuntimeException(e);
         }
 
-        System.out.println(gameList.size());
         return gameList;
     }
 
@@ -237,20 +234,13 @@ public class SQLDataAccess implements DataAccess{
         int gameID = 0;
 
         try (var conn = getConnection()) {
-            System.out.println("Connected!");
             try (var preparedStatement = conn.prepareStatement("INSERT INTO games (gamename, game) VALUES (?, ?)",
                     java.sql.Statement.RETURN_GENERATED_KEYS)) {
                 var game = new ChessGame();
                 preparedStatement.setString(1, request.gameName());
                 preparedStatement.setString(2, new Gson().toJson(game));
 
-                int affectedRows = preparedStatement.executeUpdate();
-                System.out.println(affectedRows);
-                try (var rsCheck = conn.createStatement().executeQuery("SELECT COUNT(*) FROM games")) {
-                    if (rsCheck.next()) {
-                        System.out.println("Games count after insert: " + rsCheck.getInt(1));
-                    }
-                }
+                preparedStatement.executeUpdate();
 
                 try (var rs = preparedStatement.getGeneratedKeys()) {
                     if (rs.next()) {
@@ -258,7 +248,6 @@ public class SQLDataAccess implements DataAccess{
                     }
                 }
             } catch (SQLException e) {
-                System.out.println("SQL Error!" + e.getMessage());
                 throw new RuntimeException(e);
             }
 
@@ -290,7 +279,7 @@ public class SQLDataAccess implements DataAccess{
         return username;
     }
 
-    public void joinGame(int gameID, String username, String color) {
+    public void joinGame(Integer gameID, String username, String color) {
         try (var conn = getConnection()) {
             if (Objects.equals(color, "WHITE")) {
                 try (var preparedStatement = conn.prepareStatement("UPDATE games SET whiteusername=? WHERE id=?")) {

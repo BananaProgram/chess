@@ -39,7 +39,6 @@ public class GameService {
             int gameID = dataAccess.addGame(request);
             return new NewGameResult(gameID, null);
         } catch (Exception e) {
-            System.out.println("Exception caught!");
             return new NewGameResult(null, "Internal Server Error");
         }
     }
