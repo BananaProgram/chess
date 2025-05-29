@@ -26,7 +26,7 @@ public class Server {
         Spark.staticFiles.location("web");
 
         try {
-            SQLDataAccess.configureDatabase();
+            SQLDataAccess.configureDatabase(true);
         } catch (SQLException e) {
             throw new RuntimeException("Failed to configure database", e);
         }

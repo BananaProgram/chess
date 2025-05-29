@@ -22,7 +22,8 @@ public class SQLDataAccess implements DataAccess{
         loadPropertiesFromResources();
     }
 
-    public static void configureDatabase() throws SQLException {
+    public static void configureDatabase(boolean run) throws SQLException {
+        if (run != true) {throw new RuntimeException();}
         try {
             createDatabase();
         } catch (DataAccessException e) {
@@ -107,7 +108,7 @@ public class SQLDataAccess implements DataAccess{
         }
     }
 
-    public static String generateToken() {
+    static String generateToken() {
         return UUID.randomUUID().toString();
     }
 

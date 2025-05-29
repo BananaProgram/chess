@@ -31,7 +31,7 @@ public class UnitTests {
 
     @Test
     @Order(2)
-    @DisplayName("Register - SUCCESS")
+    @DisplayName("addUser - SUCCESS")
     public void registerSuccess() {
         dataAccess.addUser(new UserData("test", "testpass", "test@test.com"));
         Assertions.assertEquals("test@test.com", dataAccess.getUser("test").email(), "Response did not have the correct username");
@@ -39,13 +39,13 @@ public class UnitTests {
 
     @Test
     @Order(3)
-    @DisplayName("Register - FAIL")
+    @DisplayName("addUser - FAIL")
     public void registerFail() {
         Assertions.assertThrows(RuntimeException.class, () -> {dataAccess.addUser(new UserData(null, null, "test@test.com"));});
     }
 
     @Test
-    @DisplayName("Login - SUCCESS")
+    @DisplayName("createAuth - SUCCESS")
     public void loginSuccess() {
         dataAccess.addUser(new UserData("test", "testpass", "test@test.com"));
 
@@ -54,13 +54,13 @@ public class UnitTests {
     }
 
     @Test
-    @DisplayName("Login - FAIL")
+    @DisplayName("createAuth - FAIL")
     public void loginFail() {
         Assertions.assertThrows(RuntimeException.class, () -> {dataAccess.createAuth(null);});
     }
 
     @Test
-    @DisplayName("Logout - SUCCESS")
+    @DisplayName("deleteAuth - SUCCESS")
     public void logoutSuccess() {
         dataAccess.addUser(new UserData("test", "testpass", "test@test.com"));
         AuthData authData = dataAccess.createAuth("test");
@@ -70,7 +70,7 @@ public class UnitTests {
     }
 
     @Test
-    @DisplayName("Logout - FAIL")
+    @DisplayName("deleteAuth - FAIL")
     public void logoutFail() {
         Assertions.assertThrows(RuntimeException.class, () -> {dataAccess.deleteAuth("blahblah");});
     }
@@ -100,14 +100,14 @@ public class UnitTests {
     }
 
     @Test
-    @DisplayName("Create Game - SUCCESS")
+    @DisplayName("addGame - SUCCESS")
     public void createGameSuccess() {
         int id = dataAccess.addGame(new NewGameRequest("newGame"));
         Assertions.assertEquals("newGame", dataAccess.findGame(id).gameName(), "Wrong game name");
     }
 
     @Test
-    @DisplayName("Create Game - FAIL")
+    @DisplayName("addGame - FAIL")
     public void createGameFail() {
         Assertions.assertThrows(RuntimeException.class, () -> {dataAccess.addGame(new NewGameRequest(null));});
     }
@@ -127,5 +127,43 @@ public class UnitTests {
         dataAccess.addUser(new UserData("test", "testpass", "test@test.com"));
         int id = dataAccess.addGame(new NewGameRequest("newGame"));
         Assertions.assertThrows(RuntimeException.class, () -> {dataAccess.joinGame(null, null, "WHITE");});
+    }
+
+    @Test
+    @DisplayName("Configure - SUCCESS")
+    public void configureSucceed() {
+        Assertions.assertDoesNotThrow(() -> {dataAccess.configureDatabase(true);});
+    }
+
+    @Test
+    @DisplayName("Configure - FAIL")
+    public void configureFail() {
+        Assertions.assertThrows(RuntimeException.class, () -> {dataAccess.configureDatabase(false);});
+    }
+
+    @Test
+    @DisplayName("getUser - SUCCESS")
+    public void getUserSucceed() {
+        dataAccess.addUser(new UserData("test", "testpass", "test@test.com"));
+        Assertions.assertDoesNotThrow(() -> {dataAccess.getUser("test");});
+    }
+
+    @Test
+    @DisplayName("getUser - FAIL")
+    public void getUserFail() {
+        Assertions.assertNull(dataAccess.getUser("test"));
+    }
+
+    @Test
+    @DisplayName("findUser - SUCCESS")
+    public void findUserSucceed() {
+        var data = dataAccess.addUser(new UserData("test", "testpass", "test@test.com"));
+        Assertions.assertEquals("test", dataAccess.findUser(data.authToken()));
+    }
+
+    @Test
+    @DisplayName("findUser - FAIL")
+    public void findUserFail() {
+        Assertions.assertNull(dataAccess.findUser("test"));
     }
 }
