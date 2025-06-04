@@ -1,10 +1,8 @@
 package server;
 
 import com.google.gson.Gson;
-import reqres.LoginRequest;
-import reqres.LoginResult;
-import reqres.RegisterRequest;
-import reqres.RegisterResult;
+import com.sun.net.httpserver.Request;
+import reqres.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,22 +20,42 @@ public class ServerFacade {
 
     public RegisterResult register(RegisterRequest req) {
         var path = "/user";
-        return this.makeRequest("POST", path, req, RegisterResult.class);
+        return this.makeRequest("POST", path, req, null, RegisterResult.class);
     }
 
     public LoginResult login(LoginRequest req) {
         var path = "/session";
-        return this.makeRequest("POST", path, req, LoginResult.class);
+        return this.makeRequest("POST", path, req, null, LoginResult.class);
     }
 
-    private <T> T makeRequest(String method, String path, Object req, Class<T> responseClass) {
+    public ErrorMessage logout(String authToken) {
+        var path = "/session";
+        return this.makeRequest("DELETE", path, null, "authorization: " + authToken, ErrorMessage.class);
+    }
+
+    public NewGameResult create(NewGameRequest req, String authToken) {
+        var path = "/game";
+        return this.makeRequest("POST", path, req, "authorization: " + authToken, NewGameResult.class);
+    }
+
+    public ListGamesResult list(String authToken) {
+        var path = "/game";
+        return this.makeRequest("GET", path, null, "authorization: " + authToken, ListGamesResult.class);
+    }
+
+    public ErrorMessage join(JoinRequest req, String authToken) {
+        var path = "/game";
+        return this.makeRequest("PUT", path, req, "authorization: " + authToken, ErrorMessage.class);
+    }
+
+    private <T> T makeRequest(String method, String path, Object req, String headers, Class<T> responseClass) {
         try {
             URL url = (new URI(serverUrl + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod(method);
             http.setDoOutput(true);
 
-            writeBody(req, http);
+            writeBody(req, http, headers);
             http.connect();
             return readBody(http, responseClass);
         } catch (IOException | URISyntaxException e) {
@@ -45,7 +63,16 @@ public class ServerFacade {
         }
     }
 
-    private static void writeBody(Object request, HttpURLConnection http) throws IOException {
+    private static void writeBody(Object request, HttpURLConnection http, String headers) throws IOException {
+        if (headers != null) {
+            String[] pairs = headers.split(";");
+            for (String pair : pairs) {
+                String[] parts = pair.split(":", 2);
+                if (parts.length == 2) {
+                    http.setRequestProperty(parts[0].trim(), parts[1].trim());
+                }
+            }
+        }
         if (request != null) {
             http.addRequestProperty("Content-Type", "application/json");
             String reqData = new Gson().toJson(request);

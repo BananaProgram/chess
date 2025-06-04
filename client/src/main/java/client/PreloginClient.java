@@ -1,5 +1,6 @@
 package client;
 
+import server.EvalResult;
 import server.ServerFacade;
 import reqres.LoginRequest;
 import reqres.RegisterRequest;
@@ -14,38 +15,38 @@ public class PreloginClient {
         server = new ServerFacade(serverURL);
     }
 
-    public String eval(String input) {
+    public EvalResult eval(String input) {
         try {
             var tokens = input.toLowerCase().split(" ");
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
-                case "quit" -> "quit";
+                case "quit" -> new EvalResult("quit", null, null);
                 case "login" -> login(params);
                 case "register" -> register(params);
                 default -> help();
             };
         } catch (Exception e) {
-            return e.getMessage();
+            return new EvalResult(e.getMessage(), null, null);
         }
     }
 
-    private String login(String[] params) {
+    private EvalResult login(String[] params) {
         var login = server.login(new LoginRequest(params[0], params[1]));
-        return String.format("Logged in as %s.", login.username());
+        return new EvalResult(String.format("Logged in as %s.", login.username()), login.authToken(), null);
     }
 
-    private String register(String[] params) {
+    private EvalResult register(String[] params) {
         var register = server.register(new RegisterRequest(params[0], params[1], params[2]));
-        return String.format("Logged in as %s.", register.username());
+        return new EvalResult(String.format("Logged in as %s.", register.username()), null, null);
     }
 
-    String help() {
-        return """
+    EvalResult help() {
+        return new EvalResult("""
         Help: Shows information about what actions you can take.
         Quit: Exits the program.
         Login <USERNAME> <PASSWORD>: Logs you in with the provided credentials
         Register <USERNAME> <PASSWORD> <EMAIL>: Registers a new user with the provided credentials.
-        """;
+        """, null, null);
     }
 }
