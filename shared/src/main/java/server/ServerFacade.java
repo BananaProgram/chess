@@ -48,6 +48,11 @@ public class ServerFacade {
         return this.makeRequest("PUT", path, req, "authorization: " + authToken, ErrorMessage.class);
     }
 
+    public ErrorMessage clear() {
+        var path = "/db";
+        return this.makeRequest("DELETE", path, null, null, ErrorMessage.class);
+    }
+
     private <T> T makeRequest(String method, String path, Object req, String headers, Class<T> responseClass) {
         try {
             URL url = (new URI(serverUrl + path)).toURL();
