@@ -1,7 +1,9 @@
 package client;
 
 import org.junit.jupiter.api.*;
+import reqres.JoinRequest;
 import reqres.LoginRequest;
+import reqres.NewGameRequest;
 import reqres.RegisterRequest;
 import server.Server;
 import server.ServerFacade;
@@ -60,6 +62,85 @@ public class ServerFacadeTests {
         var register = facade.register(new RegisterRequest("test", "test", "test@test.test"));
         facade.logout(register.authToken());
         var result = facade.login(new LoginRequest("test", "t"));
-        Assertions.assertEquals("Error: unauthorized", result.username());
+        Assertions.assertEquals("Error: unauthorized", result.message());
+    }
+
+    @Test
+    @DisplayName("Logout - SUCCESS")
+    public void logoutSuccess() {
+        var register = facade.register(new RegisterRequest("test", "test", "test@test.test"));
+        facade.logout(register.authToken());
+        var result = facade.create(new NewGameRequest("testgame"), register.authToken());
+        Assertions.assertEquals("Error: unauthorized", result.message());
+    }
+
+    @Test
+    @DisplayName("Logout - FAIL")
+    public void logoutFail() {
+        facade.register(new RegisterRequest("test", "test", "test@test.test"));
+        var result = facade.logout(null);
+        Assertions.assertEquals("Error: bad request", result.message());
+    }
+
+    @Test
+    @DisplayName("List Games - SUCCESS")
+    public void listSuccess() {
+        var register = facade.register(new RegisterRequest("test", "test", "test@test.test"));
+        facade.create(new NewGameRequest("testgame"), register.authToken());
+        var result = facade.list(register.authToken());
+        Assertions.assertEquals("testgame", result.games().getFirst().gameName());
+    }
+
+    @Test
+    @DisplayName("List Games - FAIL")
+    public void listFail() {
+        var result = facade.list(null);
+        Assertions.assertEquals("Error: unauthorized", result.message());
+    }
+
+    @Test
+    @DisplayName("Create Game - SUCCESS")
+    public void createSuccess() {
+        var register = facade.register(new RegisterRequest("test", "test", "test@test.test"));
+        facade.create(new NewGameRequest("testgame"), register.authToken());
+        var result = facade.list(register.authToken());
+        Assertions.assertEquals("testgame", result.games().getFirst().gameName());
+    }
+
+    @Test
+    @DisplayName("Create Game - FAIL")
+    public void createFail() {
+        var result = facade.create(new NewGameRequest("testgame"), null);
+        Assertions.assertEquals("Error: unauthorized", result.message());
+    }
+
+    @Test
+    @DisplayName("Play Game - SUCCESS")
+    public void playSuccess() {
+        var register = facade.register(new RegisterRequest("test", "test", "test@test.test"));
+        var game = facade.create(new NewGameRequest("testgame"), register.authToken());
+        facade.join(new JoinRequest("WHITE", game.gameID()), register.authToken());
+        var result = facade.list(register.authToken());
+        Assertions.assertEquals("test", result.games().getFirst().whiteUsername());
+    }
+
+    @Test
+    @DisplayName("Play Game - FAIL")
+    public void playFail() {
+        var register = facade.register(new RegisterRequest("test", "test", "test@test.test"));
+        facade.create(new NewGameRequest("testgame"), register.authToken());
+        var result = facade.join(new JoinRequest("WHITE", null), register.authToken());
+        Assertions.assertEquals("Error: bad request", result.message());
+    }
+
+    @Test
+    @DisplayName("Clear - SUCCESS")
+    public void clearSuccess() {
+        var register = facade.register(new RegisterRequest("test", "test", "test@test.test"));
+        facade.create(new NewGameRequest("testgame"), register.authToken());
+        facade.clear();
+        var registerAfter = facade.register(new RegisterRequest("test", "test", "test@test.test"));
+        var result = facade.list(registerAfter.authToken());
+        Assertions.assertTrue(result.games().isEmpty());
     }
 }
