@@ -55,8 +55,9 @@ public class PostloginClient {
         int i = 1;
         for (GameData game : rawGames.games()) {
             games.append(i).append(" ").append(game.gameName()).append(" White: ").append(game.whiteUsername()).
-                    append(" Black: ").append(game.blackUsername());
+                    append(" Black: ").append(game.blackUsername()).append("\n");
             currentGames.put(i, game);
+            i++;
         }
         return new EvalResult(games.toString(), authToken, null);
     }
@@ -65,7 +66,7 @@ public class PostloginClient {
         GameData game = currentGames.get(Integer.parseInt(params[0]));
         int id = game.gameID();
         server.join(new JoinRequest(params[1].toUpperCase(), id), authToken);
-        return new EvalResult("Joining " + params[0], authToken, game);
+        return new EvalResult("Joining " + params[0], authToken + " " + params[1].toUpperCase(), game);
     }
 
     private EvalResult observe(String[] params) {

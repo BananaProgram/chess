@@ -1,7 +1,9 @@
 package client;
 
+import chess.ChessGame;
 import model.GameData;
 import server.EvalResult;
+import server.ServerFacade;
 
 import java.util.Objects;
 import java.util.Scanner;
@@ -14,6 +16,7 @@ public class Repl {
     private final String serverURL;
     private String authToken = null;
     private GameData game = null;
+    private ChessGame.TeamColor color = null;
 
     public Repl(String serverURL) {
         preLoginClient = new PreloginClient(serverURL);
@@ -27,9 +30,11 @@ public class Repl {
             }
             while (authToken != null && game == null) {
                 postLogin(authToken);
+                System.out.println("Finished postlogin loop...");
             }
             while (authToken != null && game != null) {
-                System.out.println("Implement this Elena. You know it needs to happen >:(");
+                System.out.println("Reached gameplay loop...");
+                gameplay(authToken, game);
                 game = null;
             }
         }
@@ -68,9 +73,15 @@ public class Repl {
 
             try {
                 result = postLoginClient.eval(line);
+                System.out.println("Completed observe function...");
                 System.out.println(result.result());
                 game = result.game();
-                authToken = result.authToken();
+                authToken = result.authToken().split(" ")[0];
+                if (result.authToken().split(" ").length > 1) {
+                    color = result.authToken().split(" ")[1].contains("B") ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
+                } else if (game != null) {
+                    color = ChessGame.TeamColor.WHITE;
+                }
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -79,7 +90,10 @@ public class Repl {
         }
     }
 
-    public String gameplay(String authToken, GameData game) {
-        return "Gameplay not yet implemented. Try again next week.";
+    public void gameplay(String authToken, GameData game) {
+        System.out.println("Reached gameplay function...");
+        var gameplayClient = new GameplayClient(serverURL, authToken, game);
+        System.out.println("About to print board...");
+        System.out.println(gameplayClient.drawStartBoard(color));
     }
 }
