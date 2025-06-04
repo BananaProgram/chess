@@ -6,7 +6,7 @@ import model.AuthData;
 import model.GameData;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
-import service.NewGameRequest;
+import reqres.NewGameRequest;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

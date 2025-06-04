@@ -1,4 +1,4 @@
-package service;
+package reqres;
 
 import model.GameData;
 

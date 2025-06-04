@@ -1,10 +1,9 @@
 package service;
 
-import dataaccess.DataAccess;
-import dataaccess.MemoryDataAccess;
 import dataaccess.SQLDataAccess;
 import model.GameData;
 import org.junit.jupiter.api.*;
+import reqres.*;
 
 public class UnitTests {
 

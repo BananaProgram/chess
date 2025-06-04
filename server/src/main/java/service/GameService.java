@@ -1,11 +1,9 @@
 package service;
 
-import dataaccess.DataAccessException;
-import dataaccess.MemoryDataAccess;
 import dataaccess.SQLDataAccess;
 import model.GameData;
+import reqres.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 

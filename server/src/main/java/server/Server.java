@@ -1,9 +1,11 @@
 package server;
 
 import dataaccess.DataAccessException;
-import dataaccess.MemoryDataAccess;
 import dataaccess.SQLDataAccess;
-import model.*;
+import reqres.JoinRequest;
+import reqres.LoginRequest;
+import reqres.NewGameRequest;
+import reqres.RegisterRequest;
 import service.*;
 import spark.Request;
 import spark.Response;

@@ -1,4 +1,4 @@
-package service;
+package reqres;
 
 public record ErrorMessage(String message) {
 }

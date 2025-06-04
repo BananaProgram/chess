@@ -1,10 +1,10 @@
 package server;
 
 import com.google.gson.Gson;
-import service.LoginRequest;
-import service.LoginResult;
-import service.RegisterRequest;
-import service.RegisterResult;
+import reqres.LoginRequest;
+import reqres.LoginResult;
+import reqres.RegisterRequest;
+import reqres.RegisterResult;
 
 import java.io.IOException;
 import java.io.InputStream;

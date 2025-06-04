@@ -1,8 +1,8 @@
 package client;
 
 import server.ServerFacade;
-import service.LoginRequest;
-import service.RegisterRequest;
+import reqres.LoginRequest;
+import reqres.RegisterRequest;
 
 import java.util.Arrays;
 

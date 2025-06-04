@@ -4,7 +4,7 @@ import model.AuthData;
 import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.*;
-import service.*;
+import reqres.NewGameRequest;
 
 import java.sql.SQLException;
 import java.util.List;
