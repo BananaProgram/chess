@@ -76,13 +76,17 @@ public class PostloginClient {
             return new EvalResult("Please enter a valid game number and color", null, null);
         }
         if (num > currentGames.size() || !(params[1].equalsIgnoreCase("WHITE") ||
-                params[1].equalsIgnoreCase("BLACK"))) {
+                params[1].equalsIgnoreCase("BLACK")) || num < 1) {
             return new EvalResult("Please enter a valid game number and color", null, null);
         }
         GameData game = currentGames.get(num);
+        var color = params[1].toUpperCase();
+        if ((color.equals("WHITE") && game.whiteUsername() != null) || (color.equals("BLACK") && game.blackUsername() != null)) {
+            return new EvalResult("Sorry, someone is already playing that color", null, null);
+        }
         int id = game.gameID();
-        server.join(new JoinRequest(params[1].toUpperCase(), id), authToken);
-        return new EvalResult("Joining " + params[0], authToken + " " + params[1].toUpperCase(), game);
+        server.join(new JoinRequest(color, id), authToken);
+        return new EvalResult("Joining " + params[0], authToken + " " + color, game);
     }
 
     private EvalResult observe(String[] params) {
@@ -95,7 +99,7 @@ public class PostloginClient {
         } catch (NumberFormatException e) {
             return new EvalResult("Please enter a valid game number", null, null);
         }
-        if (num > currentGames.size()) {
+        if (num > currentGames.size() || num < 1) {
             return new EvalResult("Please enter a valid game number", null, null);
         }
         GameData game = currentGames.get(Integer.parseInt(params[0]));
