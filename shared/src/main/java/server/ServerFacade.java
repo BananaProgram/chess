@@ -19,38 +19,66 @@ public class ServerFacade {
     }
 
     public RegisterResult register(RegisterRequest req) {
-        var path = "/user";
-        return this.makeRequest("POST", path, req, null, RegisterResult.class);
+        try {
+            var path = "/user";
+            return this.makeRequest("POST", path, req, null, RegisterResult.class);
+        } catch (Exception e) {
+            return new RegisterResult(null, null, e.getMessage());
+        }
     }
 
     public LoginResult login(LoginRequest req) {
-        var path = "/session";
-        return this.makeRequest("POST", path, req, null, LoginResult.class);
+        try {
+            var path = "/session";
+            return this.makeRequest("POST", path, req, null, LoginResult.class);
+        } catch (Exception e) {
+            return new LoginResult(null, null, e.getMessage());
+        }
     }
 
     public ErrorMessage logout(String authToken) {
-        var path = "/session";
-        return this.makeRequest("DELETE", path, null, "authorization: " + authToken, ErrorMessage.class);
+        try {
+            var path = "/session";
+            return this.makeRequest("DELETE", path, null, "authorization: " + authToken, ErrorMessage.class);
+        } catch (Exception e) {
+            return new ErrorMessage(e.getMessage());
+        }
     }
 
     public NewGameResult create(NewGameRequest req, String authToken) {
-        var path = "/game";
-        return this.makeRequest("POST", path, req, "authorization: " + authToken, NewGameResult.class);
+        try {
+            var path = "/game";
+            return this.makeRequest("POST", path, req, "authorization: " + authToken, NewGameResult.class);
+        } catch (Exception e) {
+            return new NewGameResult(null, e.getMessage());
+        }
     }
 
     public ListGamesResult list(String authToken) {
-        var path = "/game";
-        return this.makeRequest("GET", path, null, "authorization: " + authToken, ListGamesResult.class);
+        try {
+            var path = "/game";
+            return this.makeRequest("GET", path, null, "authorization: " + authToken, ListGamesResult.class);
+        } catch (Exception e) {
+            return new ListGamesResult(null, e.getMessage());
+        }
     }
 
     public ErrorMessage join(JoinRequest req, String authToken) {
-        var path = "/game";
-        return this.makeRequest("PUT", path, req, "authorization: " + authToken, ErrorMessage.class);
+        try {
+            var path = "/game";
+            return this.makeRequest("PUT", path, req, "authorization: " + authToken, ErrorMessage.class);
+        } catch (Exception e) {
+            return new ErrorMessage(e.getMessage());
+        }
     }
 
     public ErrorMessage clear() {
-        var path = "/db";
-        return this.makeRequest("DELETE", path, null, null, ErrorMessage.class);
+        try {
+            var path = "/db";
+            return this.makeRequest("DELETE", path, null, null, ErrorMessage.class);
+        } catch (Exception e) {
+            return new ErrorMessage(e.getMessage());
+        }
     }
 
     private <T> T makeRequest(String method, String path, Object req, String headers, Class<T> responseClass) {
