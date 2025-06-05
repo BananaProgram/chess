@@ -104,8 +104,8 @@ public class ServerFacadeTests {
     public void createSuccess() {
         var register = facade.register(new RegisterRequest("test", "test", "test@test.test"));
         facade.create(new NewGameRequest("testgame"), register.authToken());
-        var result = facade.list(register.authToken());
-        Assertions.assertEquals("testgame", result.games().getFirst().gameName());
+        var response = facade.list(register.authToken());
+        Assertions.assertEquals("testgame", response.games().getFirst().gameName());
     }
 
     @Test
