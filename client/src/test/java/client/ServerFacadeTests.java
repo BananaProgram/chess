@@ -129,7 +129,7 @@ public class ServerFacadeTests {
     public void playFail() {
         var register = facade.register(new RegisterRequest("test", "test", "test@test.test"));
         facade.create(new NewGameRequest("testgame"), register.authToken());
-        var result = facade.join(new JoinRequest("WHITE", null), register.authToken());
+        var result = facade.join(new JoinRequest("WHITE", 5), register.authToken());
         Assertions.assertEquals("Error: bad request", result.message());
     }
 
