@@ -25,6 +25,7 @@ public class GameplayClient {
         System.out.println(color);
         String letters = Objects.equals(color, ChessGame.TeamColor.WHITE) ? "abcdefgh" : "hgfedcba";
         String numbers = Objects.equals(color, ChessGame.TeamColor.WHITE) ? "87654321" : "12345678";
+        String royals = Objects.equals(color, ChessGame.TeamColor.WHITE) ? "QK" : "KQ";
         StringBuilder board = new StringBuilder();
 
         board.append(SET_BG_COLOR_BLACK + "    ").append(SET_TEXT_COLOR_WHITE).append(letters.charAt(0)).append("  ")
@@ -39,9 +40,9 @@ public class GameplayClient {
             board.append(SET_TEXT_COLOR_RED);
         }
         board.append(" R ").append(SET_BG_COLOR_DARK_GREEN).append(" N ").append(SET_BG_COLOR_LIGHT_GREY).append(" B ")
-                .append(SET_BG_COLOR_DARK_GREEN).append(" K ").append(SET_BG_COLOR_LIGHT_GREY).append(" Q ")
-                .append(SET_BG_COLOR_DARK_GREEN).append(" B ").append(SET_BG_COLOR_LIGHT_GREY)
-                .append(" N ").append(SET_BG_COLOR_DARK_GREEN).append(" R ");
+                .append(SET_BG_COLOR_DARK_GREEN).append(" ").append(royals.charAt(0)).append(" ").append(SET_BG_COLOR_LIGHT_GREY)
+                .append(" ").append(royals.charAt(1)).append(" ").append(SET_BG_COLOR_DARK_GREEN).append(" B ")
+                .append(SET_BG_COLOR_LIGHT_GREY).append(" N ").append(SET_BG_COLOR_DARK_GREEN).append(" R ");
         board.append(SET_BG_COLOR_BLACK).append(SET_TEXT_COLOR_WHITE).append(" ").append(numbers.charAt(0)).append(" ");
         board.append("\n");
         board.append(" ").append(numbers.charAt(1)).append(" ").append(SET_BG_COLOR_DARK_GREEN);
@@ -99,9 +100,9 @@ public class GameplayClient {
             board.append(SET_TEXT_COLOR_BLUE);
         }
         board.append(" R ").append(SET_BG_COLOR_LIGHT_GREY).append(" N ").append(SET_BG_COLOR_DARK_GREEN).append(" B ")
-                .append(SET_BG_COLOR_LIGHT_GREY).append(" K ").append(SET_BG_COLOR_DARK_GREEN).append(" Q ")
-                .append(SET_BG_COLOR_LIGHT_GREY).append(" B ").append(SET_BG_COLOR_DARK_GREEN)
-                .append(" N ").append(SET_BG_COLOR_LIGHT_GREY).append(" R ");
+                .append(SET_BG_COLOR_LIGHT_GREY).append(" ").append(royals.charAt(0)).append(" ").append(SET_BG_COLOR_DARK_GREEN)
+                .append(" ").append(royals.charAt(1)).append(" ").append(SET_BG_COLOR_LIGHT_GREY).append(" B ")
+                .append(SET_BG_COLOR_DARK_GREEN).append(" N ").append(SET_BG_COLOR_LIGHT_GREY).append(" R ");
         board.append(SET_BG_COLOR_BLACK).append(SET_TEXT_COLOR_WHITE).append(" ").append(numbers.charAt(7)).append(" ");
         board.append("\n");
         board.append(SET_BG_COLOR_BLACK + "    ").append(SET_TEXT_COLOR_WHITE).append(letters.charAt(0)).append("  ").append(letters.charAt(1))
