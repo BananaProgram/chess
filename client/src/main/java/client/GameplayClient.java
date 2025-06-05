@@ -27,9 +27,10 @@ public class GameplayClient {
         String numbers = Objects.equals(color, ChessGame.TeamColor.WHITE) ? "87654321" : "12345678";
         StringBuilder board = new StringBuilder();
 
-        board.append(SET_BG_COLOR_BLACK + "    ").append(SET_TEXT_COLOR_WHITE).append(letters.charAt(0)).append("  ").append(letters.charAt(1)).append("  ")
-                .append(letters.charAt(2)).append("  ").append(letters.charAt(3)).append("  ").append(letters.charAt(4)).append("  ")
-                .append(letters.charAt(5)).append("  ").append(letters.charAt(6)).append("  ").append(letters.charAt(7)).append("    ");
+        board.append(SET_BG_COLOR_BLACK + "    ").append(SET_TEXT_COLOR_WHITE).append(letters.charAt(0)).append("  ")
+                .append(letters.charAt(1)).append("  ").append(letters.charAt(2)).append("  ").append(letters.charAt(3))
+                .append("  ").append(letters.charAt(4)).append("  ").append(letters.charAt(5)).append("  ")
+                .append(letters.charAt(6)).append("  ").append(letters.charAt(7)).append("    ");
         board.append("\n");
         board.append(" ").append(numbers.charAt(0)).append(" ").append(SET_BG_COLOR_LIGHT_GREY);
         if (Objects.equals(color, ChessGame.TeamColor.WHITE)) {
@@ -37,8 +38,9 @@ public class GameplayClient {
         } else {
             board.append(SET_TEXT_COLOR_RED);
         }
-        board.append(" R ").append(SET_BG_COLOR_DARK_GREEN).append(" N ").append(SET_BG_COLOR_LIGHT_GREY).append(" B ").append(SET_BG_COLOR_DARK_GREEN).append(" K ")
-                .append(SET_BG_COLOR_LIGHT_GREY).append(" Q ").append(SET_BG_COLOR_DARK_GREEN).append(" B ").append(SET_BG_COLOR_LIGHT_GREY)
+        board.append(" R ").append(SET_BG_COLOR_DARK_GREEN).append(" N ").append(SET_BG_COLOR_LIGHT_GREY).append(" B ")
+                .append(SET_BG_COLOR_DARK_GREEN).append(" K ").append(SET_BG_COLOR_LIGHT_GREY).append(" Q ")
+                .append(SET_BG_COLOR_DARK_GREEN).append(" B ").append(SET_BG_COLOR_LIGHT_GREY)
                 .append(" N ").append(SET_BG_COLOR_DARK_GREEN).append(" R ");
         board.append(SET_BG_COLOR_BLACK).append(SET_TEXT_COLOR_WHITE).append(" ").append(numbers.charAt(0)).append(" ");
         board.append("\n");
@@ -48,8 +50,9 @@ public class GameplayClient {
         } else {
             board.append(SET_TEXT_COLOR_RED);
         }
-        board.append(" P ").append(SET_BG_COLOR_LIGHT_GREY).append(" P ").append(SET_BG_COLOR_DARK_GREEN).append(" P ").append(SET_BG_COLOR_LIGHT_GREY).append(" P ")
-                .append(SET_BG_COLOR_DARK_GREEN).append(" P ").append(SET_BG_COLOR_LIGHT_GREY).append(" P ").append(SET_BG_COLOR_DARK_GREEN)
+        board.append(" P ").append(SET_BG_COLOR_LIGHT_GREY).append(" P ").append(SET_BG_COLOR_DARK_GREEN).append(" P ")
+                .append(SET_BG_COLOR_LIGHT_GREY).append(" P ").append(SET_BG_COLOR_DARK_GREEN).append(" P ")
+                .append(SET_BG_COLOR_LIGHT_GREY).append(" P ").append(SET_BG_COLOR_DARK_GREEN)
                 .append(" P ").append(SET_BG_COLOR_LIGHT_GREY).append(" P ");
         board.append(SET_BG_COLOR_BLACK).append(SET_TEXT_COLOR_WHITE).append(" ").append(numbers.charAt(1)).append(" ");
         board.append("\n");
@@ -83,8 +86,9 @@ public class GameplayClient {
         } else {
             board.append(SET_TEXT_COLOR_BLUE);
         }
-        board.append(" P ").append(SET_BG_COLOR_DARK_GREEN).append(" P ").append(SET_BG_COLOR_LIGHT_GREY).append(" P ").append(SET_BG_COLOR_DARK_GREEN).append(" P ")
-                .append(SET_BG_COLOR_LIGHT_GREY).append(" P ").append(SET_BG_COLOR_DARK_GREEN).append(" P ").append(SET_BG_COLOR_LIGHT_GREY)
+        board.append(" P ").append(SET_BG_COLOR_DARK_GREEN).append(" P ").append(SET_BG_COLOR_LIGHT_GREY).append(" P ")
+                .append(SET_BG_COLOR_DARK_GREEN).append(" P ").append(SET_BG_COLOR_LIGHT_GREY).append(" P ")
+                .append(SET_BG_COLOR_DARK_GREEN).append(" P ").append(SET_BG_COLOR_LIGHT_GREY)
                 .append(" P ").append(SET_BG_COLOR_DARK_GREEN).append(" P ");
         board.append(SET_BG_COLOR_BLACK).append(SET_TEXT_COLOR_WHITE).append(" ").append(numbers.charAt(6)).append(" ");
         board.append("\n");
@@ -94,13 +98,14 @@ public class GameplayClient {
         } else {
             board.append(SET_TEXT_COLOR_BLUE);
         }
-        board.append(" R ").append(SET_BG_COLOR_LIGHT_GREY).append(" N ").append(SET_BG_COLOR_DARK_GREEN).append(" B ").append(SET_BG_COLOR_LIGHT_GREY).append(" K ")
-                .append(SET_BG_COLOR_DARK_GREEN).append(" Q ").append(SET_BG_COLOR_LIGHT_GREY).append(" B ").append(SET_BG_COLOR_DARK_GREEN)
+        board.append(" R ").append(SET_BG_COLOR_LIGHT_GREY).append(" N ").append(SET_BG_COLOR_DARK_GREEN).append(" B ")
+                .append(SET_BG_COLOR_LIGHT_GREY).append(" K ").append(SET_BG_COLOR_DARK_GREEN).append(" Q ")
+                .append(SET_BG_COLOR_LIGHT_GREY).append(" B ").append(SET_BG_COLOR_DARK_GREEN)
                 .append(" N ").append(SET_BG_COLOR_LIGHT_GREY).append(" R ");
         board.append(SET_BG_COLOR_BLACK).append(SET_TEXT_COLOR_WHITE).append(" ").append(numbers.charAt(7)).append(" ");
         board.append("\n");
-        board.append(SET_BG_COLOR_BLACK + "    ").append(SET_TEXT_COLOR_WHITE).append(letters.charAt(0)).append("  ").append(letters.charAt(1)).append("  ")
-                .append(letters.charAt(2)).append("  ").append(letters.charAt(3)).append("  ").append(letters.charAt(4)).append("  ")
+        board.append(SET_BG_COLOR_BLACK + "    ").append(SET_TEXT_COLOR_WHITE).append(letters.charAt(0)).append("  ").append(letters.charAt(1))
+                .append("  ").append(letters.charAt(2)).append("  ").append(letters.charAt(3)).append("  ").append(letters.charAt(4)).append("  ")
                 .append(letters.charAt(5)).append("  ").append(letters.charAt(6)).append("  ").append(letters.charAt(7)).append("    ");
 
         return board.toString();
