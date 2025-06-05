@@ -30,10 +30,8 @@ public class Repl {
             }
             while (authToken != null && game == null) {
                 postLogin(authToken);
-                System.out.println("Finished postlogin loop...");
             }
             while (authToken != null && game != null) {
-                System.out.println("Reached gameplay loop...");
                 gameplay(authToken, game);
                 game = null;
             }
@@ -59,6 +57,9 @@ public class Repl {
 
             System.out.println();
         }
+        if (result.result() == "quit") {
+            System.exit(0);
+        }
     }
 
     public void postLogin(String authToken) {
@@ -73,14 +74,17 @@ public class Repl {
 
             try {
                 result = postLoginClient.eval(line);
-                System.out.println("Completed observe function...");
                 System.out.println(result.result());
                 game = result.game();
-                authToken = result.authToken().split(" ")[0];
-                if (result.authToken().split(" ").length > 1) {
-                    color = result.authToken().split(" ")[1].contains("B") ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
-                } else if (game != null) {
-                    color = ChessGame.TeamColor.WHITE;
+                if (result.authToken() != null) {
+                    this.authToken = result.authToken().split(" ")[0];
+                    if (result.authToken().split(" ").length > 1) {
+                        color = result.authToken().split(" ")[1].contains("B") ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
+                    } else if (game != null) {
+                        color = ChessGame.TeamColor.WHITE;
+                    }
+                } else {
+                    this.authToken = null;
                 }
             } catch (Exception e) {
                 throw new RuntimeException(e);

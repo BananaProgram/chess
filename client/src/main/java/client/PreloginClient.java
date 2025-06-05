@@ -32,11 +32,21 @@ public class PreloginClient {
     }
 
     private EvalResult login(String[] params) {
+        if (params.length < 2) {
+            return new EvalResult("Please enter a valid username and password", null, null);
+        }
         var login = server.login(new LoginRequest(params[0], params[1]));
+        if (login.message() != null) {
+            return new EvalResult("Please enter a valid username and password", null, null);
+        }
         return new EvalResult(String.format("Logged in as %s.", login.username()), login.authToken(), null);
+
     }
 
     private EvalResult register(String[] params) {
+        if (params.length < 2) {
+            return new EvalResult("Please enter a valid username, password, and email", null, null);
+        }
         var register = server.register(new RegisterRequest(params[0], params[1], params[2]));
         return new EvalResult(String.format("Logged in as %s.", register.username()), null, null);
     }

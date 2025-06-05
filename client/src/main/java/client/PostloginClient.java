@@ -45,6 +45,9 @@ public class PostloginClient {
     }
 
     private EvalResult create(String[] params) {
+        if (params.length < 1) {
+            return new EvalResult("Please enter a name for the game", null, null);
+        }
         server.create(new NewGameRequest(params[0]), authToken);
         return new EvalResult(String.format("Created new game: %s", params[0]), authToken, null);
     }
@@ -63,13 +66,38 @@ public class PostloginClient {
     }
 
     private EvalResult play(String[] params) {
-        GameData game = currentGames.get(Integer.parseInt(params[0]));
+        if (params.length < 2) {
+            return new EvalResult("Please enter a valid game number and color", null, null);
+        }
+        int num;
+        try {
+            num = Integer.parseInt(params[0]);
+        } catch (NumberFormatException e) {
+            return new EvalResult("Please enter a valid game number and color", null, null);
+        }
+        if (num > currentGames.size() || !(params[1].equalsIgnoreCase("WHITE") ||
+                params[1].equalsIgnoreCase("BLACK"))) {
+            return new EvalResult("Please enter a valid game number and color", null, null);
+        }
+        GameData game = currentGames.get(num);
         int id = game.gameID();
         server.join(new JoinRequest(params[1].toUpperCase(), id), authToken);
         return new EvalResult("Joining " + params[0], authToken + " " + params[1].toUpperCase(), game);
     }
 
     private EvalResult observe(String[] params) {
+        if (params.length < 1) {
+            return new EvalResult("Please enter a valid game number", null, null);
+        }
+        int num;
+        try {
+            num = Integer.parseInt(params[0]);
+        } catch (NumberFormatException e) {
+            return new EvalResult("Please enter a valid game number", null, null);
+        }
+        if (num > currentGames.size()) {
+            return new EvalResult("Please enter a valid game number", null, null);
+        }
         GameData game = currentGames.get(Integer.parseInt(params[0]));
         return new EvalResult("Observing " + params[0], authToken, game);
     }
