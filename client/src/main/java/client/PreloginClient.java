@@ -44,10 +44,13 @@ public class PreloginClient {
     }
 
     private EvalResult register(String[] params) {
-        if (params.length < 2) {
+        if (params.length < 3) {
             return new EvalResult("Please enter a valid username, password, and email", null, null);
         }
         var register = server.register(new RegisterRequest(params[0], params[1], params[2]));
+        if (register.message() != null) {
+            return new EvalResult("Username already taken", null, null);
+        }
         return new EvalResult(String.format("Logged in as %s.", register.username()), register.authToken(), null);
     }
 
