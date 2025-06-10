@@ -5,10 +5,11 @@ import model.GameData;
 import server.EvalResult;
 import server.ServerFacade;
 
+import javax.management.Notification;
 import java.util.Objects;
 import java.util.Scanner;
 
-public class Repl {
+public class Repl implements NotificationHandler{
     //just take in the input and use a try bracket to attempt to use Client to evaluate it. repl but e is handled separately
     //Client will return a result, print out that result
     //Switch between different clients (there should be 3) as necessary
@@ -99,5 +100,9 @@ public class Repl {
         var gameplayClient = new GameplayClient(serverURL, authToken, game);
         System.out.println("About to print board...");
         System.out.println(gameplayClient.drawStartBoard(color));
+    }
+
+    public void notify(Notification notification) {
+        System.out.println(notification.getMessage());
     }
 }
