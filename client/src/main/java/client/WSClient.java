@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import javax.management.Notification;
 import javax.websocket.*;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Scanner;
 
@@ -26,10 +27,21 @@ public class WSClient extends Endpoint {
         });
     }
 
-    public void send(String msg) throws Exception {
-        this.session.getBasicRemote().sendText(msg);
+    public void joinGame(String username, String color) throws Exception {
+        this.session.getBasicRemote().sendText(username + " has joined the game playing " + color);
     }
 
-    public void onOpen(Session session, EndpointConfig endpointConfig) {
+    public void observe(String username) throws Exception {
+        this.session.getBasicRemote().sendText(username + " is observing the game");
     }
+
+    // public void makeMove() {}
+
+    public void leaveGame(String username) throws IOException {
+        this.session.getBasicRemote().sendText(username + " has left the game");
+        this.session.close();
+    }
+
+    @Override
+    public void onOpen(Session session, EndpointConfig endpointConfig) {}
 }
