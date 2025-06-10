@@ -1,31 +1,27 @@
 package client;
 
+import com.google.gson.Gson;
+
+import javax.management.Notification;
 import javax.websocket.*;
 import java.net.URI;
 import java.util.Scanner;
 
 public class WSClient extends Endpoint {
 
-    public static void main(String[] args) throws Exception {
-        var ws = new WSClient();
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Enter a message you want to echo");
-        while (true) {
-            ws.send(scanner.nextLine());
-        }
-    }
-
     public Session session;
+    public NotificationHandler notificationHandler;
 
-    public WSClient() throws Exception {
+    public WSClient(NotificationHandler notificationHandler) throws Exception {
         URI uri = new URI("ws://localhost:8080/ws");
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         this.session = container.connectToServer(this, uri);
+        this.notificationHandler = notificationHandler;
 
         this.session.addMessageHandler(new MessageHandler.Whole<String>() {
             public void onMessage(String message) {
-                System.out.println(message);
+                Notification notif = new Gson().fromJson(message, Notification.class);
+                notificationHandler.notify(notif);
             }
         });
     }
