@@ -33,9 +33,7 @@ public class Server {
             throw new RuntimeException("Failed to configure database", e);
         }
 
-        // Register your endpoints and handle exceptions here.
-
-        //This line initializes the server and can be removed once you have a functioning endpoint 
+        Spark.webSocket("/ws", WSHandler.class);
 
         Spark.post("/user", this::register);
         Spark.delete("/db", this::clear);
