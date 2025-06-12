@@ -34,5 +34,6 @@ public class SessionManager {
         for (var c : closedSessions) {
             sessions.remove(c.username);
         }
+
     }
 }
