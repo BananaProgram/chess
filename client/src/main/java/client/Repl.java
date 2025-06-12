@@ -97,7 +97,7 @@ public class Repl implements NotificationHandler{
 
     public void gameplay(String authToken, GameData game) {
         System.out.println("Reached gameplay function...");
-        var gameplayClient = new GameplayClient(serverURL, authToken, game);
+        var gameplayClient = new GameplayClient(serverURL, authToken, game, this);
         System.out.println("About to print board...");
         System.out.println(gameplayClient.drawStartBoard(color));
     }
