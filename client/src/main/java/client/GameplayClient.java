@@ -14,11 +14,22 @@ public class GameplayClient {
     private final ServerFacade server;
     private final String authToken;
     private final GameData gameData;
+    private final WSClient ws;
 
-    public GameplayClient(String serveruRL, String authToken, GameData gameData) {
+    public GameplayClient(String serveruRL, String authToken, GameData gameData, NotificationHandler notificationHandler) {
         server = new ServerFacade(serveruRL);
         this.authToken = authToken;
         this.gameData = gameData;
+
+        try {
+            ws = new WSClient(notificationHandler);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void joinGame() {
+
     }
 
     public String drawStartBoard(ChessGame.TeamColor color) {
