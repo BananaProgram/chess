@@ -86,6 +86,7 @@ public class PostloginClient {
         }
         int id = game.gameID();
         server.join(new JoinRequest(color, id), authToken);
+
         return new EvalResult("Joining " + params[0], authToken + " " + color, game);
     }
 
