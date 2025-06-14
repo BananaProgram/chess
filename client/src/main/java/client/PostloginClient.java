@@ -2,12 +2,14 @@ package client;
 
 import model.GameData;
 import reqres.JoinRequest;
+import reqres.ListGamesResult;
 import reqres.NewGameRequest;
 import server.EvalResult;
 import server.ServerFacade;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class PostloginClient {
 
@@ -35,21 +37,21 @@ public class PostloginClient {
                 default -> help();
             };
         } catch (Exception e) {
-            return new EvalResult(e.getMessage(), authToken, null);
+            return new EvalResult(e.getMessage(), authToken, null, null);
         }
     }
 
     private EvalResult logout() {
         server.logout(authToken);
-        return new EvalResult("Logged out", null, null);
+        return new EvalResult("Logged out", null, null, null);
     }
 
     private EvalResult create(String[] params) {
         if (params.length < 1) {
-            return new EvalResult("Please enter a name for the game", null, null);
+            return new EvalResult("Please enter a name for the game", null, null, null);
         }
         server.create(new NewGameRequest(params[0]), authToken);
-        return new EvalResult(String.format("Created new game: %s", params[0]), authToken, null);
+        return new EvalResult(String.format("Created new game: %s", params[0]), authToken, null, null);
     }
 
     private EvalResult list() {
@@ -62,49 +64,58 @@ public class PostloginClient {
             currentGames.put(i, game);
             i++;
         }
-        return new EvalResult(games.toString(), authToken, null);
+        return new EvalResult(games.toString(), authToken, null, null);
     }
 
     private EvalResult play(String[] params) {
         if (params.length < 2) {
-            return new EvalResult("Please enter a valid game number and color", null, null);
+            return new EvalResult("Please enter a valid game number and color", null, null, null);
         }
         int num;
         try {
             num = Integer.parseInt(params[0]);
         } catch (NumberFormatException e) {
-            return new EvalResult("Please enter a valid game number and color", null, null);
+            return new EvalResult("Please enter a valid game number and color", null, null, null);
         }
         if (num > currentGames.size() || !(params[1].equalsIgnoreCase("WHITE") ||
                 params[1].equalsIgnoreCase("BLACK")) || num < 1) {
-            return new EvalResult("Please enter a valid game number and color", null, null);
+            return new EvalResult("Please enter a valid game number and color", null, null, null);
         }
+
         GameData game = currentGames.get(num);
         var color = params[1].toUpperCase();
         if ((color.equals("WHITE") && game.whiteUsername() != null) || (color.equals("BLACK") && game.blackUsername() != null)) {
-            return new EvalResult("Sorry, someone is already playing that color", null, null);
+            return new EvalResult("Sorry, someone is already playing that color", null, null, null);
         }
         int id = game.gameID();
         server.join(new JoinRequest(color, id), authToken);
+        ListGamesResult updatedGames = server.list(authToken);
+        GameData updatedGame = null;
+        for (GameData g : updatedGames.games()) {
+            if (g.gameID() == id) {
+                updatedGame = g;
+                break;
+            }
+        }
 
-        return new EvalResult("Joining " + params[0], authToken + " " + color, game);
+        return new EvalResult("Joining " + params[0], authToken + " " + color, updatedGame, null);
     }
 
     private EvalResult observe(String[] params) {
         if (params.length < 1) {
-            return new EvalResult("Please enter a valid game number", null, null);
+            return new EvalResult("Please enter a valid game number", null, null, null);
         }
         int num;
         try {
             num = Integer.parseInt(params[0]);
         } catch (NumberFormatException e) {
-            return new EvalResult("Please enter a valid game number", null, null);
+            return new EvalResult("Please enter a valid game number", null, null, null);
         }
         if (num > currentGames.size() || num < 1) {
-            return new EvalResult("Please enter a valid game number", null, null);
+            return new EvalResult("Please enter a valid game number", null, null, null);
         }
         GameData game = currentGames.get(Integer.parseInt(params[0]));
-        return new EvalResult("Observing " + params[0], authToken, game);
+        return new EvalResult("Observing " + params[0], authToken, game, null);
     }
 
     static EvalResult help() {
@@ -115,6 +126,6 @@ public class PostloginClient {
                 List Games:	Lists all the games that currently exist.
                 Play <ID> <WHITE|BLACK>: Joins the game correlated with the given number.
                 Observe <ID>: Joins that game as an observer.
-                """, authToken, null);
+                """, authToken, null, null);
     }
 }

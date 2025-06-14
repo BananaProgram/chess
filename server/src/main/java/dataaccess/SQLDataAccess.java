@@ -332,4 +332,36 @@ public class SQLDataAccess implements DataAccess{
 
         return gameData;
     }
+
+    public void saveGame(int gameID, ChessGame updatedGame) {
+        try (var conn = getConnection()) {
+            try (var preparedStatement = conn.prepareStatement(
+                    "UPDATE games SET game=? WHERE id=?")) {
+                String json = new Gson().toJson(updatedGame);
+                preparedStatement.setString(1, json);
+                preparedStatement.setInt(2, gameID);
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException | DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void removePlayer(int gameID, String color) {
+        if (!color.equals("white") && !color.equals("black")) {
+            throw new IllegalArgumentException("Invalid color column: " + color);
+        }
+
+        String sql = "UPDATE games SET " + color + "username = NULL WHERE id = ?";
+
+        try (var conn = getConnection();
+             var preparedStatement = conn.prepareStatement(sql)) {
+
+            preparedStatement.setInt(1, gameID);
+            preparedStatement.executeUpdate();
+        } catch (SQLException | DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

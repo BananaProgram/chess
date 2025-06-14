@@ -12,11 +12,13 @@ public class ChessGame {
 
     private TeamColor teamTurn;
     private ChessBoard board = new ChessBoard();
+    private boolean over;
 
 
     public ChessGame() {
         teamTurn = TeamColor.WHITE;
         board.resetBoard();
+        over = false;
     }
 
     /**
@@ -211,6 +213,14 @@ public class ChessGame {
      */
     public ChessBoard getBoard() {
         return board;
+    }
+
+    public void gameOver() {
+        over = true;
+    }
+
+    public boolean isOver() {
+        return over;
     }
 
     @Override

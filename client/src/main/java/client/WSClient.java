@@ -1,6 +1,8 @@
 package client;
 
+import chess.ChessMove;
 import com.google.gson.Gson;
+import websocket.commands.UserGameCommand;
 
 import javax.management.Notification;
 import javax.websocket.*;
@@ -35,11 +37,36 @@ public class WSClient extends Endpoint {
         this.session.getBasicRemote().sendText(username + " is observing the game");
     }
 
-    // public void makeMove() {}
+    public void makeMove(String authToken, int gameID, ChessMove move) {
+        UserGameCommand command = new UserGameCommand(
+                UserGameCommand.CommandType.MAKE_MOVE,
+                authToken,
+                gameID,
+                move
+        );
+
+        String json = new Gson().toJson(command);
+        try {
+            this.session.getBasicRemote().sendText(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void leaveGame(String username) throws IOException {
         this.session.getBasicRemote().sendText(username + " has left the game");
         this.session.close();
+    }
+
+    public void resign(String authtoken, int gameID) {
+        try {
+            UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.RESIGN, authtoken, gameID);
+            String json = new Gson().toJson(command);
+            this.session.getBasicRemote().sendText(json);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

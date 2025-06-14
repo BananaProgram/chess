@@ -21,45 +21,45 @@ public class PreloginClient {
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
-                case "quit" -> new EvalResult("quit", null, null);
+                case "quit" -> new EvalResult("quit", null, null, null);
                 case "login" -> login(params);
                 case "register" -> register(params);
                 default -> help();
             };
         } catch (Exception e) {
-            return new EvalResult(e.getMessage(), null, null);
+            return new EvalResult(e.getMessage(), null, null, null);
         }
     }
 
     private EvalResult login(String[] params) {
         if (params.length < 2) {
-            return new EvalResult("Please enter a valid username and password", null, null);
+            return new EvalResult("Please enter a valid username and password", null, null, null);
         }
         var login = server.login(new LoginRequest(params[0], params[1]));
         if (login.message() != null) {
-            return new EvalResult("Please enter a valid username and password", null, null);
+            return new EvalResult("Please enter a valid username and password", null, null, null);
         }
-        return new EvalResult(String.format("Logged in as %s.", login.username()), login.authToken(), null);
+        return new EvalResult(String.format("Logged in as %s.", login.username()), login.authToken(), null, login.username());
 
     }
 
     private EvalResult register(String[] params) {
         if (params.length < 3) {
-            return new EvalResult("Please enter a valid username, password, and email", null, null);
+            return new EvalResult("Please enter a valid username, password, and email", null, null, null);
         }
         var register = server.register(new RegisterRequest(params[0], params[1], params[2]));
         if (register.message() != null) {
-            return new EvalResult("Username already taken", null, null);
+            return new EvalResult("Username already taken", null, null, null);
         }
-        return new EvalResult(String.format("Logged in as %s.", register.username()), register.authToken(), null);
+        return new EvalResult(String.format("Logged in as %s.", register.username()), register.authToken(), null, register.username());
     }
 
     EvalResult help() {
         return new EvalResult("""
         Help: Shows information about what actions you can take.
         Quit: Exits the program.
-        Login <USERNAME> <PASSWORD>: Logs you in with the provided credentials
+        Login <USERNAME> <PASSWORD>: Logs you in with the provided credentials.
         Register <USERNAME> <PASSWORD> <EMAIL>: Registers a new user with the provided credentials.
-        """, null, null);
+        """, null, null, null);
     }
 }
