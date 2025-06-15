@@ -3,6 +3,7 @@ package client;
 import chess.ChessGame;
 import model.GameData;
 import server.EvalResult;
+import websocket.messages.ServerMessage;
 
 import javax.management.Notification;
 import java.util.Objects;
@@ -114,7 +115,7 @@ public class Repl implements NotificationHandler{
         }
     }
 
-    public void notify(Notification notification) {
-        System.out.println(notification.getMessage());
+    public void notify(ServerMessage notification) {
+        System.out.println(notification.getServerMessageType());
     }
 }

@@ -156,7 +156,7 @@ public class GameplayClient {
     public EvalResult makeMove(String[] params) {
         ws.makeMove(authToken, gameData.gameID(), parseMove(params));
         redraw();
-        return new EvalResult(null, authToken, gameData, username);
+        return new EvalResult("Move executed.", authToken, gameData, username);
     }
 
     private ChessMove parseMove(String[] rawMove) {

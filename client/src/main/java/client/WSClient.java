@@ -3,8 +3,8 @@ package client;
 import chess.ChessMove;
 import com.google.gson.Gson;
 import websocket.commands.UserGameCommand;
+import websocket.messages.ServerMessage;
 
-import javax.management.Notification;
 import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;
@@ -23,7 +23,9 @@ public class WSClient extends Endpoint {
 
         this.session.addMessageHandler(new MessageHandler.Whole<String>() {
             public void onMessage(String message) {
-                Notification notif = new Gson().fromJson(message, Notification.class);
+                System.out.println("Received message");
+                System.out.println(message);
+                ServerMessage notif = new Gson().fromJson(message, ServerMessage.class);
                 notificationHandler.notify(notif);
             }
         });
@@ -71,4 +73,10 @@ public class WSClient extends Endpoint {
 
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {}
+
+    @Override
+    public void onClose(Session session, CloseReason closeReason) {
+        System.out.println("WebSocket closed: " + closeReason.getReasonPhrase());
+    }
+
 }

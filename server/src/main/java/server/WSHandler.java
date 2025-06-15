@@ -62,8 +62,9 @@ public class WSHandler {
         }
         var notification = ServerMessage.notification(message);
         var board = ServerMessage.loadGame(game);
-        sessions.send(username, board);
+        //sessions.send(username, board);
         sessions.broadcast(username, notification, gameID);
+        sessions.send(username, board);
     }
 
     private void leave(String username, Session session, Integer gameID) throws IOException {
@@ -119,8 +120,8 @@ public class WSHandler {
             var board = ServerMessage.loadGame(game);
 
             sessions.broadcast(username, notification, gameID);
-            sessions.broadcast(username, board, gameID);
-            sessions.send(username, board);
+            sessions.broadcast(null, board, gameID);
+            //sessions.send(username, board);
         } catch (InvalidMoveException e) {
             var error = ServerMessage.error("Invalid move: " + e.getMessage());
             sessions.send(username, error);  // only send to the player who made the move

@@ -24,19 +24,15 @@ public class SessionManager {
         String json = new Gson().toJson(notif);
 
         var closedSessions = new ArrayList<ChessSession>();
+
         for (var c : sessions.values()) {
             if (c.session.isOpen() && c.gameID.equals(gameID)) {
                 if (!c.username.equals(sourceUsername)) {
-                    System.out.printf("Sending message to %s (game %d): %s%n", c.username, c.gameID, json);
                     c.send(json);
                 }
             } else {
                 closedSessions.add(c);
             }
-        }
-
-        for (var c : closedSessions) {
-            sessions.remove(c.username);
         }
 
     }
@@ -48,16 +44,12 @@ public class SessionManager {
         for (var c : sessions.values()) {
             if (c.session.isOpen()) {
                 if (c.username.equals(username)) {
-                    System.out.printf("Sending message to %s (game %d): %s%n", c.username, c.gameID, json);
                     c.send(json);
                 }
             } else {
                 closedSessions.add(c);
             }
         }
-
-        for (var c : closedSessions) {
-            sessions.remove(c.username);
-        }
     }
+
 }
